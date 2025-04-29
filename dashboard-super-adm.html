@@ -1,23 +1,61 @@
-<!-- dashboard-super-adm.html -->
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <!-- Meta tags e CSS aqui -->
-    <title>ASMARA Gestão de Ligas - Dashboard</title>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-    
-    <!-- Chart.js para gráficos -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <!-- Conteúdo do dashboard aqui -->
-    
-    <script src="js/firebase-config.js"></script>
-    <script src="js/dashboard-super-adm.js"></script>
-</body>
-</html>
+import { useSession, getSession } from 'next-auth/react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import DashboardLayout from '../../components/DashboardLayout';
+import SuperAdmOverview from '../../components/dashboards/SuperAdmOverview';
+import { getIndicadores } from '../../lib/data';
+
+export default function SuperAdmDashboard({ initialData }) {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState(initialData);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push('/');
+    } else if (status === "authenticated") {
+      if (session.user.role !== 'superadm') {
+        router.push('/dashboard/' + session.user.role);
+      }
+      setLoading(false);
+    }
+  }, [status, session, router]);
+
+  if (loading) {
+    return <div className="loading">Carregando...</div>;
+  }
+
+  return (
+    <DashboardLayout>
+      <Head>
+        <title>ASMARA Gestão de Ligas - Dashboard Super ADM</title>
+      </Head>
+      <div className="dashboard-container">
+        <SuperAdmOverview data={dashboardData} />
+      </div>
+    </DashboardLayout>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  
+  if (!session || session.user.role !== 'superadm') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+  
+  const data = await getIndicadores();
+  
+  return {
+    props: {
+      initialData: data,
+    },
+  };
+}
