@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Dashboard Super ADM</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Adicionar Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <img src="images/logo-asmara.png" alt="ASMARA Logo" style="width: 100px; margin: 20px auto; display: block;">
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active"><a href="dashboard-super-adm.html">Visão Gerencial</a></li>
+                    <li><a href="dashboard-produtos.html">Análise de Produtos</a></li>
+                    <li><a href="dashboard-carteira.html">Visão por Carteira</a></li>
+                    <li><a href="gamificacao.html">Gamificação</a></li>
+                    <li><a href="agenda.html">Agenda de Visitas</a></li>
+                    <li><a href="#" id="logout-btn">Sair</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <h1>Dashboard Super ADM</h1>
+                <div class="user-info">
+                    <span class="username">Super Administrador</span>
+                    <button id="update-btn" class="update-button">Atualizar Dados</button>
+                </div>
+            </div>
+            
+            <div class="dashboard-container">
+                <div class="last-update">
+                    <p>Dados atualizados em: <strong>Abril/2025</strong></p>
+                </div>
+                
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <h3>Valor Total Vendas</h3>
+                        <div class="value">R$ 25.388,84</div>
+                        <div class="subtitle">645 itens vendidos</div>
+                        <div class="trend up">+12% <span>↑</span></div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <h3>Microcrédito Concedido</h3>
+                        <div class="value">R$ 29.243,72</div>
+                        <div class="subtitle">545 operações</div>
+                        <div class="trend up">+8% <span>↑</span></div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <h3>Saldo Devedor</h3>
+                        <div class="value">R$ 9.022,16</div>
+                        <div class="subtitle">30,8% do total concedido</div>
+                        <div class="subtitle">259 pendentes</div>
+                    </div>
+                    
+                    <div class="kpi-card">
+                        <h3>Taxa de Conversão</h3>
+                        <div class="value">23,6%</div>
+                        <div class="subtitle">R$ 6.906,36 vendidos</div>
+                        <div class="trend up">+5% <span>↑</span></div>
+                    </div>
+                </div>
+                
+                <div class="alerts-section">
+                    <h2>Alertas de Gestão</h2>
+                    <div class="alert-container">
+                        <div class="alert danger">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Alta taxa de inadimplência</div>
+                                <p>3 ONGs possuem taxa de inadimplência acima de 30% do microcrédito concedido.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert warning">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Maras sem atividade</div>
+                                <p>32 Maras não registraram vendas no mês atual, sendo 12 com microcrédito ativo.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert success">
+                            <div class="alert-icon">✓</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Destaque de performance</div>
+                                <p>ASSOCIACAO REDE ACESSIBILIDADE teve o maior volume de vendas no mês: R$ 12.338,07</p>
+                            </div>
+                        </div>
+                        
+                        <div class="alert warning">
+                            <div class="alert-icon">⚠️</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Baixo volume de vendas</div>
+                                <p>UNIDADES PROPRIAS apresenta conversão de apenas 10,8% do microcrédito em vendas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="charts-row">
+                    <div class="chart-container">
+                        <h3>Faturamento por ONG</h3>
+                        <canvas id="faturamentoChart"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h3>Taxa de Inadimplência por ONG</h3>
+                        <canvas id="inadimplenciaChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <h3>Top Maras - Maiores Vendas</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>ONG</th>
+                                <th>Valor Vendas</th>
+                                <th>Qtd. Itens</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SIMONE SILVA DO NASCIMENTO</td>
+                                <td>REDE ACESS.</td>
+                                <td>R$ 4.172,59</td>
+                                <td>64</td>
+                            </tr>
+                            <tr>
+                                <td>ANDRÉIA NAIR VIEIRA LEITE</td>
+                                <td>ECLESIA MOV.</td>
+                                <td>R$ 1.052,79</td>
+                                <td>14</td>
+                            </tr>
+                            <tr>
+                                <td>ZILDA LUIZ DA SILVA</td>
+                                <td>REDE ACESS.</td>
+                                <td>R$ 1.665,51</td>
+                                <td>32</td>
+                            </tr>
+                            <tr>
+                                <td>GILDANETE MORAES BAZILIO</td>
+                                <td>SONHAR ALTO</td>
+                                <td>R$ 923,54</td>
+                                <td>13</td>
+                            </tr>
+                            <tr>
+                                <td>SIMONE NOGUEIRA BARBOSA</td>
+                                <td>SONHAR ALTO</td>
+                                <td>R$ 680,84</td>
+                                <td>8</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dashboard-super-adm.js"></script>
+</body>
+</html>
