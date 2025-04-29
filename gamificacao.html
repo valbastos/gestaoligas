@@ -1,647 +1,406 @@
 <!DOCTYPE html>
-<!-- saved from url=(0032)https://slhnorsw.genspark.space/ -->
-<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASMARA Gestão de Ligas - Gamificação</title>
-    <link href="./gamificacao_files/tailwind.min.css" rel="stylesheet">
-    <link href="./gamificacao_files/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --asmara-pink: #ff0066;
-            --asmara-pink-light: #ff4d94;
-            --asmara-pink-dark: #cc0052;
+            --primary-color: #FF0066;
+            --secondary-color: #6C0F5A;
+            --light-color: #ffffff;
+            --dark-color: #333333;
+            --grey-color: #f5f5f5;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --gold-color: #FFD700;
+            --silver-color: #C0C0C0;
+            --bronze-color: #CD7F32;
         }
-        body {
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
         }
-        .asmara-bg {
-            background-color: var(--asmara-pink);
+
+        body {
+            background-color: #f0f2f5;
         }
-        .asmara-text {
-            color: var(--asmara-pink);
+
+        .app-container {
+            display: flex;
         }
-        .asmara-border {
-            border-color: var(--asmara-pink);
+
+        .sidebar {
+            background-color: white;
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 100;
         }
-        .badge {
-            position: relative;
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 10px;
-            transition: transform 0.3s;
-        }
-        .badge:hover {
-            transform: scale(1.05);
-        }
-        .badge-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--asmara-pink);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .badge-label {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
+
+        .sidebar-header {
+            padding: 20px 0;
             text-align: center;
-            color: #333;
         }
-        .progress-circle {
-            position: relative;
-            width: 120px;
-            height: 120px;
+
+        .sidebar-menu ul {
+            list-style: none;
+            padding: 0;
         }
-        .progress-circle__svg {
-            transform: rotate(-90deg);
+
+        .sidebar-menu ul li {
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
         }
-        .progress-circle__circle {
-            fill: none;
-            stroke-width: 10;
-            stroke-linecap: round;
+
+        .sidebar-menu ul li.active {
+            border-left-color: var(--primary-color);
+            background-color: #ffeef5;
         }
-        .progress-circle__circle--bg {
-            stroke: #eee;
+
+        .sidebar-menu ul li a {
+            color: var(--dark-color);
+            text-decoration: none;
+            display: block;
+            font-size: 16px;
         }
-        .progress-circle__circle--fill {
-            stroke: var(--asmara-pink);
-            stroke-dasharray: 314;
-            stroke-dashoffset: calc(314 - (314 * var(--percent)) / 100);
+
+        .sidebar-menu ul li.active a {
+            color: var(--primary-color);
+            font-weight: 600;
         }
-        .progress-circle__text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #333;
+
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
         }
-        .trophy-icon {
-            color: gold;
-            font-size: 1.5rem;
-            margin-right: 6px;
-        }
-        .medal-icon {
-            color: silver;
-            font-size: 1.5rem;
-            margin-right: 6px;
-        }
-        .bronze-icon {
-            color: #cd7f32;
-            font-size: 1.5rem;
-            margin-right: 6px;
-        }
-        .ranking-card {
-            border-left: 4px solid var(--asmara-pink);
-            transition: transform 0.2s;
-        }
-        .ranking-card:hover {
-            transform: translateX(5px);
-        }
-        .ong-pill {
-            background-color: var(--asmara-pink);
+
+        .header {
+            background-color: var(--primary-color);
             color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: bold;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .story-card {
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .username {
+            margin-right: 15px;
+            font-weight: 500;
+        }
+
+        .update-button {
+            background-color: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .dashboard-container {
+            padding: 20px;
+        }
+
+        .last-update {
+            margin-bottom: 20px;
+            color: var(--dark-color);
+        }
+
+        .gamification-header {
+            background-color: white;
             border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
         }
-        .story-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+
+        .gamification-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 24px;
         }
-    </style>
-</head>
-<body class="min-h-screen">
-    <!-- Header -->
-    <header class="asmara-bg text-white p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold">ASMARA Gestão de Ligas</h1>
-                <span class="ml-4 bg-white text-pink-600 px-3 py-1 rounded-lg font-bold">Gamificação</span>
-            </div>
-            <div class="text-right">
-                <p class="text-sm">Dados atualizados em: Abril/2025</p>
-                <p class="text-sm">Usuário: Super Administrador</p>
-            </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto p-4">
-        <!-- Navigation tabs -->
-        <div class="flex border-b border-gray-200 mb-6">
-            <button class="px-6 py-2 font-semibold border-b-2 asmara-text asmara-border">Rankings</button>
-            <button class="px-6 py-2 font-semibold text-gray-500">Conquistas</button>
-            <button class="px-6 py-2 font-semibold text-gray-500">Mural de Destaques</button>
-            <button class="px-6 py-2 font-semibold text-gray-500">Métricas</button>
-        </div>
+        .gamification-header p {
+            color: #666;
+            margin-bottom: 15px;
+        }
 
-        <!-- Status cards -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-            <div class="bg-white rounded-lg shadow p-4 border-l-4 asmara-border">
-                <h3 class="text-gray-500 text-sm uppercase">Pontuação Total</h3>
-                <p class="text-3xl font-bold mt-1">23.458 <span class="text-green-500 text-sm">+5%</span></p>
-                <p class="text-sm text-gray-600 mt-2">Pontos acumulados em todas as ligas</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4 border-l-4 asmara-border">
-                <h3 class="text-gray-500 text-sm uppercase">Liga Líder</h3>
-                <p class="text-2xl font-bold mt-1">REDE ACESSIBILIDADE</p>
-                <p class="text-sm text-gray-600 mt-2">12.338 pontos no mês</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4 border-l-4 asmara-border">
-                <h3 class="text-gray-500 text-sm uppercase">Mara Destaque</h3>
-                <p class="text-2xl font-bold mt-1">Simone S. Nascimento</p>
-                <p class="text-sm text-gray-600 mt-2">4.172 pontos no mês</p>
-            </div>
-            <div class="bg-white rounded-lg shadow p-4 border-l-4 asmara-border">
-                <h3 class="text-gray-500 text-sm uppercase">Badges Conquistados</h3>
-                <p class="text-3xl font-bold mt-1">32 <span class="text-green-500 text-sm">+3</span></p>
-                <p class="text-sm text-gray-600 mt-2">Novos reconhecimentos este mês</p>
-            </div>
-        </div>
+        .period-selector {
+            display: inline-block;
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            padding: 5px;
+            margin-top: 10px;
+        }
 
-        <!-- 2-column layout -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Left column -->
-            <div>
-                <!-- Rankings - Ligas -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Ranking de Ligas</h2>
-                        <span class="text-sm text-gray-500">Atualizado hoje</span>
-                    </div>
-                    
-                    <!-- Liga 1 -->
-                    <div class="ranking-card bg-gray-50 p-4 rounded mb-3 flex items-center">
-                        <div class="trophy-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">ASSOCIAÇÃO REDE ACESSIBILIDADE</h3>
-                                <span class="text-lg font-bold asmara-text">12.338 pts</span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600 mt-1">
-                                <p>27 Maras ativas</p>
-                                <p>R$ 12.338,07 em vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Liga 2 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="medal-icon">
-                            <i class="fas fa-medal"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">INSTITUTO ECLESIA MOVEMENT</h3>
-                                <span class="text-lg font-bold asmara-text">4.164 pts</span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600 mt-1">
-                                <p>12 Maras ativas</p>
-                                <p>R$ 4.164,10 em vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Liga 3 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="bronze-icon">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">ASSOCIAÇÃO BENEF. VIVENDA DA CRIANÇA</h3>
-                                <span class="text-lg font-bold asmara-text">3.268 pts</span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600 mt-1">
-                                <p>8 Maras ativas</p>
-                                <p>R$ 3.268,47 em vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Liga 4 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="w-8 text-center text-gray-600 font-bold">4</div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">INSTITUTO SONHAR ALTO</h3>
-                                <span class="text-lg font-bold asmara-text">2.752 pts</span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600 mt-1">
-                                <p>7 Maras ativas</p>
-                                <p>R$ 2.752,85 em vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Liga 5 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="w-8 text-center text-gray-600 font-bold">5</div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">INSTITUTO RESILIÊNCIA AZUL</h3>
-                                <span class="text-lg font-bold asmara-text">2.572 pts</span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600 mt-1">
-                                <p>8 Maras ativas</p>
-                                <p>R$ 2.572,37 em vendas</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="mt-4 w-full py-2 border border-gray-300 rounded text-sm font-medium hover:bg-gray-50">
-                        Ver ranking completo
-                    </button>
-                </div>
-                
-                <!-- Badges e Reconhecimentos -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Badges e Reconhecimentos</h2>
-                        <button class="text-sm asmara-text font-medium">Ver todos</button>
-                    </div>
-                    
-                    <div class="flex flex-wrap justify-center">
-                        <div class="badge">
-                            <div class="badge-img flex items-center justify-center bg-yellow-100">
-                                <i class="fas fa-crown text-4xl text-yellow-500"></i>
-                            </div>
-                            <span class="badge-label">Liga Campeã do Mês</span>
-                        </div>
-                        
-                        <div class="badge">
-                            <div class="badge-img flex items-center justify-center bg-purple-100">
-                                <i class="fas fa-star text-4xl text-purple-500"></i>
-                            </div>
-                            <span class="badge-label">Mara Destaque</span>
-                        </div>
-                        
-                        <div class="badge">
-                            <div class="badge-img flex items-center justify-center bg-green-100">
-                                <i class="fas fa-chart-line text-4xl text-green-500"></i>
-                            </div>
-                            <span class="badge-label">Superação de Metas</span>
-                        </div>
-                        
-                        <div class="badge">
-                            <div class="badge-img flex items-center justify-center bg-blue-100">
-                                <i class="fas fa-handshake text-4xl text-blue-500"></i>
-                            </div>
-                            <span class="badge-label">Menor Inadimplência</span>
-                        </div>
-                        
-                        <div class="badge">
-                            <div class="badge-img flex items-center justify-center bg-red-100">
-                                <i class="fas fa-fire text-4xl text-red-500"></i>
-                            </div>
-                            <span class="badge-label">Meta 100%</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Histórico de Premiações -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Histórico de Premiações</h2>
-                        <button class="text-sm asmara-text font-medium">Ver todos</button>
-                    </div>
-                    
-                    <div class="space-y-4">
-                        <div class="border-l-4 border-yellow-400 pl-3 py-1">
-                            <p class="font-medium">Liga Campeã - Março/2025</p>
-                            <p class="text-sm text-gray-600">ASSOCIAÇÃO REDE ACESSIBILIDADE</p>
-                        </div>
-                        
-                        <div class="border-l-4 border-purple-400 pl-3 py-1">
-                            <p class="font-medium">Mara Destaque - Março/2025</p>
-                            <p class="text-sm text-gray-600">Zilda Luiz da Silva</p>
-                        </div>
-                        
-                        <div class="border-l-4 border-green-400 pl-3 py-1">
-                            <p class="font-medium">Superação de Meta - Março/2025</p>
-                            <p class="text-sm text-gray-600">INSTITUTO ECLESIA MOVEMENT</p>
-                        </div>
-                        
-                        <div class="border-l-4 border-blue-400 pl-3 py-1">
-                            <p class="font-medium">Menor Inadimplência - Março/2025</p>
-                            <p class="text-sm text-gray-600">INSTITUTO SONHAR ALTO</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Right column -->
-            <div>
-                <!-- Ranking Maras -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Ranking de Maras</h2>
-                        <span class="text-sm text-gray-500">Top 5 performers</span>
-                    </div>
-                    
-                    <!-- Mara 1 -->
-                    <div class="ranking-card bg-gray-50 p-4 rounded mb-3 flex items-center">
-                        <div class="trophy-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">Simone S. Nascimento</h3>
-                                <span class="text-lg font-bold asmara-text">4.172 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
-                                <span class="ong-pill">REDE ACESS.</span>
-                                <p>64 itens vendidos</p>
-                                <p>R$ 4.172,59</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Mara 2 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="medal-icon">
-                            <i class="fas fa-medal"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">Zilda Luiz da Silva</h3>
-                                <span class="text-lg font-bold asmara-text">1.665 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
-                                <span class="ong-pill">REDE ACESS.</span>
-                                <p>32 itens vendidos</p>
-                                <p>R$ 1.665,51</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Mara 3 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="bronze-icon">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">Andréia Nair Vieira Leite</h3>
-                                <span class="text-lg font-bold asmara-text">1.052 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
-                                <span class="ong-pill">ECLESIA</span>
-                                <p>14 itens vendidos</p>
-                                <p>R$ 1.052,79</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Mara 4 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="w-8 text-center text-gray-600 font-bold">4</div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">Patricia O. Souza</h3>
-                                <span class="text-lg font-bold asmara-text">1.436 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
-                                <span class="ong-pill">REDE ACESS.</span>
-                                <p>106 itens vendidos</p>
-                                <p>R$ 1.436,85</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Mara 5 -->
-                    <div class="ranking-card bg-white p-4 rounded mb-3 flex items-center">
-                        <div class="w-8 text-center text-gray-600 font-bold">5</div>
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-bold">Gildanete M. Bazilio</h3>
-                                <span class="text-lg font-bold asmara-text">923 pts</span>
-                            </div>
-                            <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
-                                <span class="ong-pill">SONHAR ALTO</span>
-                                <p>13 itens vendidos</p>
-                                <p>R$ 923,54</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <button class="mt-4 w-full py-2 border border-gray-300 rounded text-sm font-medium hover:bg-gray-50">
-                        Ver ranking completo
-                    </button>
-                </div>
-                
-                <!-- Indicadores de Progresso (Metas) -->
-                <div class="bg-white rounded-lg shadow p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Progresso das Metas</h2>
-                        <button class="text-sm asmara-text font-medium">Configurar</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
-                        <!-- Meta 1 -->
-                        <div class="flex flex-col items-center">
-                            <div class="progress-circle" style="--percent: 85;">
-                                <svg class="progress-circle__svg" width="120" height="120" viewBox="0 0 120 120">
-                                    <circle class="progress-circle__circle progress-circle__circle--bg" cx="60" cy="60" r="50"></circle>
-                                    <circle class="progress-circle__circle progress-circle__circle--fill" cx="60" cy="60" r="50"></circle>
-                                </svg>
-                                <div class="progress-circle__text">85%</div>
-                            </div>
-                            <p class="mt-2 font-medium text-center">Meta de Vendas</p>
-                            <p class="text-sm text-gray-500">R$ 25.388 de R$ 30.000</p>
-                        </div>
-                        
-                        <!-- Meta 2 -->
-                        <div class="flex flex-col items-center">
-                            <div class="progress-circle" style="--percent: 65;">
-                                <svg class="progress-circle__svg" width="120" height="120" viewBox="0 0 120 120">
-                                    <circle class="progress-circle__circle progress-circle__circle--bg" cx="60" cy="60" r="50"></circle>
-                                    <circle class="progress-circle__circle progress-circle__circle--fill" cx="60" cy="60" r="50"></circle>
-                                </svg>
-                                <div class="progress-circle__text">65%</div>
-                            </div>
-                            <p class="mt-2 font-medium text-center">Maras Ativas</p>
-                            <p class="text-sm text-gray-500">58 de 90 Maras</p>
-                        </div>
-                        
-                        <!-- Meta 3 -->
-                        <div class="flex flex-col items-center">
-                            <div class="progress-circle" style="--percent: 23.6;">
-                                <svg class="progress-circle__svg" width="120" height="120" viewBox="0 0 120 120">
-                                    <circle class="progress-circle__circle progress-circle__circle--bg" cx="60" cy="60" r="50"></circle>
-                                    <circle class="progress-circle__circle progress-circle__circle--fill" cx="60" cy="60" r="50"></circle>
-                                </svg>
-                                <div class="progress-circle__text">23.6%</div>
-                            </div>
-                            <p class="mt-2 font-medium text-center">Taxa de Conversão</p>
-                            <p class="text-sm text-gray-500">Meta: 25%</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Mural de Destaques -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold">Mural de Destaques</h2>
-                        <button class="text-sm asmara-text font-medium">Ver todos</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- História 1 -->
-                        <div class="story-card bg-gray-100 overflow-hidden">
-                            <div class="p-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="font-bold">Simone Silva do Nascimento</h3>
-                                    <span class="ong-pill">REDE ACESS.</span>
-                                </div>
-                                <p class="text-sm text-gray-600 mb-2">Recorde de vendas no mês de abril com mais de R$ 4.000 em produtos vendidos!</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-500">12/04/2025</span>
-                                    <button class="text-sm asmara-text">Ler história completa</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- História 2 -->
-                        <div class="story-card bg-gray-100 overflow-hidden">
-                            <div class="p-4">
-                                <div class="flex justify-between items-center mb-2">
-                                    <h3 class="font-bold">REDE ACESSIBILIDADE</h3>
-                                    <span class="ong-pill">ONG</span>
-                                </div>
-                                <p class="text-sm text-gray-600 mb-2">Liga com menor taxa de inadimplência pelo terceiro mês consecutivo!</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-500">10/04/2025</span>
-                                    <button class="text-sm asmara-text">Ler história completa</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Sistema de Pontuação -->
-        <div class="mt-6 bg-white rounded-lg shadow p-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold">Sistema de Pontuação</h2>
-                <button class="text-sm asmara-text font-medium">Detalhes completos</button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="border rounded-lg p-4">
-                    <h3 class="font-bold asmara-text mb-2">Pontos por Vendas</h3>
-                    <ul class="text-sm space-y-2">
-                        <li class="flex justify-between">
-                            <span>R$ 1 em vendas</span>
-                            <span class="font-bold">1 ponto</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Bônus para vendas acima de R$ 1.000</span>
-                            <span class="font-bold">+100 pontos</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Bônus para vendas acima de R$ 3.000</span>
-                            <span class="font-bold">+300 pontos</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="border rounded-lg p-4">
-                    <h3 class="font-bold asmara-text mb-2">Pontos por Margem</h3>
-                    <ul class="text-sm space-y-2">
-                        <li class="flex justify-between">
-                            <span>Produtos com margem &gt; 50%</span>
-                            <span class="font-bold">+0.2 pt/R$</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Produtos com margem &gt; 75%</span>
-                            <span class="font-bold">+0.5 pt/R$</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>Mix ideal de produtos</span>
-                            <span class="font-bold">+50 pontos</span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="border rounded-lg p-4">
-                    <h3 class="font-bold asmara-text mb-2">Pontos por Inadimplência</h3>
-                    <ul class="text-sm space-y-2">
-                        <li class="flex justify-between">
-                            <span>0% de inadimplência</span>
-                            <span class="font-bold">+200 pontos</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>1-10% de inadimplência</span>
-                            <span class="font-bold">+100 pontos</span>
-                        </li>
-                        <li class="flex justify-between">
-                            <span>11-20% de inadimplência</span>
-                            <span class="font-bold">+50 pontos</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Compartilhar -->
-        <div class="mt-6 flex items-center justify-between bg-white rounded-lg shadow p-6">
-            <div>
-                <h2 class="text-xl font-bold">Compartilhar Conquistas</h2>
-                <p class="text-sm text-gray-600 mt-1">Divulgue os resultados e incentive todas as Maras!</p>
-            </div>
-            <div class="flex gap-3">
-                <button class="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    <i class="fab fa-facebook mr-2"></i> Facebook
-                </button>
-                <button class="flex items-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                    <i class="fab fa-whatsapp mr-2"></i> WhatsApp
-                </button>
-                <button class="flex items-center px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">
-                    <i class="fas fa-envelope mr-2"></i> Email
-                </button>
-            </div>
-        </div>
-    </main>
+        .period-selector button {
+            background: none;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #666;
+        }
 
-    <!-- Footer -->
-    <footer class="bg-gray-100 p-6 mt-8">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <p class="font-bold">ASMARA Gestão de Ligas © 2025</p>
-                    <p class="text-sm text-gray-600">A Força de Renda da Favela</p>
-                </div>
-                <div class="flex flex-col md:flex-row items-center">
-                    <button class="mb-2 md:mb-0 md:mr-4 text-sm asmara-text">Dashboard Super ADM</button>
-                    <button class="mb-2 md:mb-0 md:mr-4 text-sm asmara-text">Visão ONGs</button>
-                    <button class="text-sm asmara-text">Visão Gestor de Liga</button>
-                </div>
-            </div>
-        </div>
-    </footer>
+        .period-selector button.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
 
+        .gamification-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
 
-    <script id="html_badge_script1">
-        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
-            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDrX962IZiRo%2F4ZtJo5AuT7LlP%2FIPOFmhwiHdMKLzqvW%2F8%2B7qKZTjuD55lfet47Vc3NSjNWLtRMIl1DbNqcYMsgzLovbs3GgOSaLFyS7Xv%2B9iily8dmExz7EQz9cWqfm9oNxYPn9lPe7IaY5zQ8XlryUaBfvvRB2EwMqDCWsg8jWQ3hPy1%2FvcIHp9iSnaKY53X8beLaaxlaKOqr1UBkMu8SytQnQjnQeM5DQMBdy9aaRs1ofOqnNW8h8aCkclTyGJBh6Kxpe233i2A27ksQC7Kwp5Ro9LpFK1WpsYvVAqKKdcRMpVDdsY6rSKBQ%2BanNrhuK%2Fh8B1QL6DXpp%2BOShzE2W8lIOa1S401znEug3NsFKl0HRcHjJptBJFe0Lah%2FvOSh0dMvrswsBQSQieFQQBRN0KFwVp7YKF8j2n8OsQF0KpMuySOQxBrGmQ0mcFubL%2Ffrota39qw4%2Ft239WuPm7%2BqsxrQG%2BMhE5H88GqnrYvrQj4%2BJ%2BkJ6UFtGVqdjJJ%2Ft3ArQ%3D%3D";
-        window.__genspark_locale = "pt-BR";
-        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDrX962IZiRo/4ZtJo5AuT7LlP/IPOFmhwiHdMKLzqvW/8+7qKZTjuD55lfet47Vc3NSjNWLtRMIl1DbNqcYMsgzLovbs3GgOSaLFyS7Xv+9iily8dmExz7EQz9cWqfm9oNxYPn9lPe7IaY5zQ8XlryUaBfvvRB2EwMqDCWsg8jWQ3hPy1/vcIHp9iSnaKY53X8beLaaxlaKOqr1UBkMu8SytQnQjnQeM5DQMBdy9aaRs1ofOqnNW8h8aCkclTyGJBh6Kxpe233i2A27ksQC7Kwp5Ro9LpFK1WpsYvVAqKKdcRMpVDdsY6rSKBQ+anNrhuK/h8B1QL6DXpp+OShzE2W8lIOa1S401znEug3NsFKl0HRcHjJptBJFe0Lah/vOSh0dMvrswsBQSQieFQQBRN0KFwVp7YKF8j2n8OsQF0KpMuySOQxBrGmQ0mcFubL/frota39qw4/t239WuPm7+qsxrQG+MhE5H88GqnrYvrQj4+J+kJ6UFtGVqdjJJ/t3ArQ==";
-    </script>
-    </body></html>
+        .gamification-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .trophy-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .gold {
+            color: var(--gold-color);
+        }
+
+        .silver {
+            color: var(--silver-color);
+        }
+
+        .bronze {
+            color: var(--bronze-color);
+        }
+
+        .gamification-card h3 {
+            font-size: 18px;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .gamification-card .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .gamification-card .subtitle {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rankings-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .ranking-box {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .ranking-box h3 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .ranking-position {
+            width: 30px;
+            height: 30px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .ranking-position.top-1 {
+            background-color: var(--gold-color);
+            color: white;
+        }
+
+        .ranking-position.top-2 {
+            background-color: var(--silver-color);
+            color: white;
+        }
+
+        .ranking-position.top-3 {
+            background-color: var(--bronze-color);
+            color: white;
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .ranking-detail {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .ranking-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .badges-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .badges-container h3 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .badge-item {
+            text-align: center;
+        }
+
+        .badge-icon {
+            width: 60px;
+            height: 60px;
+            background-color: #f5f5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 24px;
+        }
+
+        .badge-icon.earned {
+            background-color: #FFEEF5;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .badge-icon.locked {
+            background-color: #f5f5f5;
+            color: #999;
+        }
+
+        .badge-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .badge-description {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .history-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .history-container h3 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .history-date {
+            width: 100px;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .history-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .history-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            background-color: #FFEEF5;
+            color: var(--primary-color);
+            margin-left: 10px;
+        }
+
+        @media (max-width: 1024px) {
+            .gamification-cards, .rankings-container {
+                grid-template-columns:
