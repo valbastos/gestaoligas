@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://wlsrltnp.genspark.space/ -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Agenda de Visitas</title>
+    <link href="./ASMARA Gestão de Ligas - Agenda de Visitas_files/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./ASMARA Gestão de Ligas - Agenda de Visitas_files/flatpickr.min.css">
+    <link rel="stylesheet" href="./ASMARA Gestão de Ligas - Agenda de Visitas_files/main.min.css">
+    <link rel="stylesheet" href="./ASMARA Gestão de Ligas - Agenda de Visitas_files/all.min.css">
+    <style>
+        :root {
+            --asmara-pink: #ff0066;
+            --asmara-pink-dark: #cc0052;
+            --asmara-pink-light: #ff99c2;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .asmara-bg-primary {
+            background-color: var(--asmara-pink);
+        }
+        .asmara-bg-secondary {
+            background-color: var(--asmara-pink-light);
+        }
+        .asmara-text-primary {
+            color: var(--asmara-pink);
+        }
+        .asmara-border-primary {
+            border-color: var(--asmara-pink);
+        }
+        .btn-asmara {
+            background-color: var(--asmara-pink);
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-asmara:hover {
+            background-color: var(--asmara-pink-dark);
+        }
+        .fc-event {
+            background-color: var(--asmara-pink);
+            border-color: var(--asmara-pink-dark);
+        }
+        .fc-event:hover {
+            background-color: var(--asmara-pink-dark);
+        }
+        .badge {
+            background-color: var(--asmara-pink);
+            color: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        .page-section {
+            margin-bottom: 2rem;
+            break-inside: avoid;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 0.5rem;
+        }
+        .visit-card {
+            border-left: 4px solid var(--asmara-pink);
+            transition: all 0.3s;
+        }
+        .visit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .reminder {
+            border-left: 4px solid #f59e0b;
+        }
+        .completed {
+            border-left: 4px solid #10b981;
+        }
+        .canceled {
+            border-left: 4px solid #ef4444;
+        }
+        .stat-card {
+            border-top: 3px solid var(--asmara-pink);
+        }
+        /* Customização do calendário para PDF */
+         {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .page-section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="asmara-bg-primary text-white shadow-md">
+        <div class="container mx-auto py-4 px-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="text-2xl font-bold">ASMARA</div>
+                <div class="ml-2 text-lg">Gestão de Ligas</div>
+            </div>
+            <div class="flex items-center">
+                <span class="mr-4">Agenda de Visitas</span>
+                <div class="bg-white text-gray-800 rounded-full p-2">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4">
+        <!-- Dashboard com estatísticas -->
+        <section class="page-section grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Programadas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold asmara-text-primary">12</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Realizadas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-green-500">8</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Pendentes</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-yellow-500">3</span>
+                    <span class="ml-2 text-sm text-gray-500">próxima em 2 dias</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Canceladas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-red-500">1</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna Esquerda -->
+            <div class="lg:col-span-2">
+                <!-- Calendário mensal -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Calendário de Visitas</h2>
+                        <button id="newVisitBtn" class="btn-asmara rounded-md px-4 py-2 text-sm flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Nova Visita
+                        </button>
+                    </div>
+                    <div id="calendar" class="h-96 fc fc-media-screen fc-direction-ltr fc-theme-standard"><div class="fc-header-toolbar fc-toolbar fc-toolbar-ltr"><div class="fc-toolbar-chunk"><div class="fc-button-group"><button type="button" title="Previous month" aria-pressed="false" class="fc-prev-button fc-button fc-button-primary"><span class="fc-icon fc-icon-chevron-left"></span></button><button type="button" title="Next month" aria-pressed="false" class="fc-next-button fc-button fc-button-primary"><span class="fc-icon fc-icon-chevron-right"></span></button></div><button type="button" title="This month" disabled="" aria-pressed="false" class="fc-today-button fc-button fc-button-primary">today</button></div><div class="fc-toolbar-chunk"><h2 class="fc-toolbar-title" id="fc-dom-1">abril de 2025</h2></div><div class="fc-toolbar-chunk"><div class="fc-button-group"><button type="button" title="month view" aria-pressed="true" class="fc-dayGridMonth-button fc-button fc-button-primary fc-button-active">month</button><button type="button" title="week view" aria-pressed="false" class="fc-timeGridWeek-button fc-button fc-button-primary">week</button><button type="button" title="list view" aria-pressed="false" class="fc-listWeek-button fc-button fc-button-primary">list</button></div></div></div><div aria-labelledby="fc-dom-1" class="fc-view-harness fc-view-harness-active" style="height: 572.593px;"><div class="fc-daygrid fc-dayGridMonth-view fc-view"><table role="grid" class="fc-scrollgrid  fc-scrollgrid-liquid"><thead role="rowgroup"><tr role="presentation" class="fc-scrollgrid-section fc-scrollgrid-section-header "><th role="presentation"><div class="fc-scroller-harness"><div class="fc-scroller" style="overflow: hidden scroll;"><table role="presentation" class="fc-col-header " style="width: 771px;"><colgroup></colgroup><thead role="presentation"><tr role="row"><th role="columnheader" class="fc-col-header-cell fc-day fc-day-sun"><div class="fc-scrollgrid-sync-inner"><a aria-label="domingo" class="fc-col-header-cell-cushion ">dom.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-mon"><div class="fc-scrollgrid-sync-inner"><a aria-label="segunda-feira" class="fc-col-header-cell-cushion ">seg.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-tue"><div class="fc-scrollgrid-sync-inner"><a aria-label="terça-feira" class="fc-col-header-cell-cushion ">ter.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-wed"><div class="fc-scrollgrid-sync-inner"><a aria-label="quarta-feira" class="fc-col-header-cell-cushion ">qua.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-thu"><div class="fc-scrollgrid-sync-inner"><a aria-label="quinta-feira" class="fc-col-header-cell-cushion ">qui.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-fri"><div class="fc-scrollgrid-sync-inner"><a aria-label="sexta-feira" class="fc-col-header-cell-cushion ">sex.</a></div></th><th role="columnheader" class="fc-col-header-cell fc-day fc-day-sat"><div class="fc-scrollgrid-sync-inner"><a aria-label="sábado" class="fc-col-header-cell-cushion ">sáb.</a></div></th></tr></thead></table></div></div></th></tr></thead><tbody role="rowgroup"><tr role="presentation" class="fc-scrollgrid-section fc-scrollgrid-section-body  fc-scrollgrid-section-liquid"><td role="presentation"><div class="fc-scroller-harness fc-scroller-harness-liquid"><div class="fc-scroller fc-scroller-liquid-absolute" style="overflow: hidden scroll;"><div class="fc-daygrid-body fc-daygrid-body-unbalanced " style="width: 771px;"><table role="presentation" class="fc-scrollgrid-sync-table" style="width: 771px; height: 287px;"><colgroup></colgroup><tbody role="presentation"><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-past fc-day-other" data-date="2025-03-30" aria-labelledby="fc-dom-2"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-2" class="fc-daygrid-day-number" aria-label="30 de março de 2025">30</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-past fc-day-other" data-date="2025-03-31" aria-labelledby="fc-dom-4"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-4" class="fc-daygrid-day-number" aria-label="31 de março de 2025">31</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-past" data-date="2025-04-01" aria-labelledby="fc-dom-6"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-6" class="fc-daygrid-day-number" aria-label="1 de abril de 2025">1</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(16, 185, 129);"></div><div class="fc-event-time">10</div><div class="fc-event-title">Microcrédito - Simone Silva</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-past" data-date="2025-04-02" aria-labelledby="fc-dom-8"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-8" class="fc-daygrid-day-number" aria-label="2 de abril de 2025">2</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-past" data-date="2025-04-03" aria-labelledby="fc-dom-10"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-10" class="fc-daygrid-day-number" aria-label="3 de abril de 2025">3</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-past" data-date="2025-04-04" aria-labelledby="fc-dom-12"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-12" class="fc-daygrid-day-number" aria-label="4 de abril de 2025">4</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-past" data-date="2025-04-05" aria-labelledby="fc-dom-14"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-14" class="fc-daygrid-day-number" aria-label="5 de abril de 2025">5</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(239, 68, 68);"></div><div class="fc-event-time">16</div><div class="fc-event-title">Visita Cancelada - Patricia</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-past" data-date="2025-04-06" aria-labelledby="fc-dom-16"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-16" class="fc-daygrid-day-number" aria-label="6 de abril de 2025">6</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-past" data-date="2025-04-07" aria-labelledby="fc-dom-18"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-18" class="fc-daygrid-day-number" aria-label="7 de abril de 2025">7</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-past" data-date="2025-04-08" aria-labelledby="fc-dom-20"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-20" class="fc-daygrid-day-number" aria-label="8 de abril de 2025">8</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-past" data-date="2025-04-09" aria-labelledby="fc-dom-22"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-22" class="fc-daygrid-day-number" aria-label="9 de abril de 2025">9</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-past" data-date="2025-04-10" aria-labelledby="fc-dom-24"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-24" class="fc-daygrid-day-number" aria-label="10 de abril de 2025">10</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(16, 185, 129);"></div><div class="fc-event-time">9:15</div><div class="fc-event-title">Acompanhamento - Liga Rede Acessibilidade</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-past" data-date="2025-04-11" aria-labelledby="fc-dom-26"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-26" class="fc-daygrid-day-number" aria-label="11 de abril de 2025">11</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-past" data-date="2025-04-12" aria-labelledby="fc-dom-28"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-28" class="fc-daygrid-day-number" aria-label="12 de abril de 2025">12</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-past" data-date="2025-04-13" aria-labelledby="fc-dom-30"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-30" class="fc-daygrid-day-number" aria-label="13 de abril de 2025">13</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-past" data-date="2025-04-14" aria-labelledby="fc-dom-32"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-32" class="fc-daygrid-day-number" aria-label="14 de abril de 2025">14</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-past" data-date="2025-04-15" aria-labelledby="fc-dom-34"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-34" class="fc-daygrid-day-number" aria-label="15 de abril de 2025">15</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(16, 185, 129);"></div><div class="fc-event-time">14:30</div><div class="fc-event-title">Visita Realizada - Zilda Luiz</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-past" data-date="2025-04-16" aria-labelledby="fc-dom-36"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-36" class="fc-daygrid-day-number" aria-label="16 de abril de 2025">16</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-past" data-date="2025-04-17" aria-labelledby="fc-dom-38"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-38" class="fc-daygrid-day-number" aria-label="17 de abril de 2025">17</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-past" data-date="2025-04-18" aria-labelledby="fc-dom-40"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-40" class="fc-daygrid-day-number" aria-label="18 de abril de 2025">18</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-past" data-date="2025-04-19" aria-labelledby="fc-dom-42"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-42" class="fc-daygrid-day-number" aria-label="19 de abril de 2025">19</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-past" data-date="2025-04-20" aria-labelledby="fc-dom-44"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-44" class="fc-daygrid-day-number" aria-label="20 de abril de 2025">20</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-past" data-date="2025-04-21" aria-labelledby="fc-dom-46"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-46" class="fc-daygrid-day-number" aria-label="21 de abril de 2025">21</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-past" data-date="2025-04-22" aria-labelledby="fc-dom-48"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-48" class="fc-daygrid-day-number" aria-label="22 de abril de 2025">22</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(255, 0, 102);"></div><div class="fc-event-time">14</div><div class="fc-event-title">Visita - Simone Silva</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-past" data-date="2025-04-23" aria-labelledby="fc-dom-50"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-50" class="fc-daygrid-day-number" aria-label="23 de abril de 2025">23</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-past" data-date="2025-04-24" aria-labelledby="fc-dom-52"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-52" class="fc-daygrid-day-number" aria-label="24 de abril de 2025">24</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-past" data-date="2025-04-25" aria-labelledby="fc-dom-54"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-54" class="fc-daygrid-day-number" aria-label="25 de abril de 2025">25</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-past" data-date="2025-04-26" aria-labelledby="fc-dom-56"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-56" class="fc-daygrid-day-number" aria-label="26 de abril de 2025">26</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-past" data-date="2025-04-27" aria-labelledby="fc-dom-58"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-58" class="fc-daygrid-day-number" aria-label="27 de abril de 2025">27</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-past" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(255, 0, 102);"></div><div class="fc-event-time">10:30</div><div class="fc-event-title">Treinamento - Liga Rede Acessibilidade</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-past" data-date="2025-04-28" aria-labelledby="fc-dom-60"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-60" class="fc-daygrid-day-number" aria-label="28 de abril de 2025">28</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-today " data-date="2025-04-29" aria-labelledby="fc-dom-62"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-62" class="fc-daygrid-day-number" aria-label="29 de abril de 2025">29</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-future" data-date="2025-04-30" aria-labelledby="fc-dom-64"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-64" class="fc-daygrid-day-number" aria-label="30 de abril de 2025">30</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-event-harness" style="margin-top: 0px;"><a class="fc-daygrid-event fc-daygrid-dot-event fc-event fc-event-start fc-event-end fc-event-future" tabindex="0"><div class="fc-daygrid-event-dot" style="border-color: rgb(255, 0, 102);"></div><div class="fc-event-time">15:45</div><div class="fc-event-title">Microcrédito - Andréia Nair</div></a></div><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-future fc-day-other" data-date="2025-05-01" aria-labelledby="fc-dom-66"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-66" class="fc-daygrid-day-number" aria-label="1 de maio de 2025">1</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-future fc-day-other" data-date="2025-05-02" aria-labelledby="fc-dom-68"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-68" class="fc-daygrid-day-number" aria-label="2 de maio de 2025">2</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-future fc-day-other" data-date="2025-05-03" aria-labelledby="fc-dom-70"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-70" class="fc-daygrid-day-number" aria-label="3 de maio de 2025">3</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr><tr role="row"><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sun fc-day-future fc-day-other" data-date="2025-05-04" aria-labelledby="fc-dom-72"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-72" class="fc-daygrid-day-number" aria-label="4 de maio de 2025">4</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-mon fc-day-future fc-day-other" data-date="2025-05-05" aria-labelledby="fc-dom-74"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-74" class="fc-daygrid-day-number" aria-label="5 de maio de 2025">5</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-tue fc-day-future fc-day-other" data-date="2025-05-06" aria-labelledby="fc-dom-76"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-76" class="fc-daygrid-day-number" aria-label="6 de maio de 2025">6</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-wed fc-day-future fc-day-other" data-date="2025-05-07" aria-labelledby="fc-dom-78"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-78" class="fc-daygrid-day-number" aria-label="7 de maio de 2025">7</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-thu fc-day-future fc-day-other" data-date="2025-05-08" aria-labelledby="fc-dom-80"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-80" class="fc-daygrid-day-number" aria-label="8 de maio de 2025">8</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-fri fc-day-future fc-day-other" data-date="2025-05-09" aria-labelledby="fc-dom-82"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-82" class="fc-daygrid-day-number" aria-label="9 de maio de 2025">9</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td><td role="gridcell" class="fc-daygrid-day fc-day fc-day-sat fc-day-future fc-day-other" data-date="2025-05-10" aria-labelledby="fc-dom-84"><div class="fc-daygrid-day-frame fc-scrollgrid-sync-inner"><div class="fc-daygrid-day-top"><a id="fc-dom-84" class="fc-daygrid-day-number" aria-label="10 de maio de 2025">10</a></div><div class="fc-daygrid-day-events"><div class="fc-daygrid-day-bottom" style="margin-top: 0px;"></div></div><div class="fc-daygrid-day-bg"></div></div></td></tr></tbody></table></div></div></div></td></tr></tbody></table></div></div></div>
+                </section>
+
+                <!-- Mapa de visitas -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-xl font-bold mb-4">Distribuição Geográfica das Visitas</h2>
+                    <div id="map" style="background: rgb(238, 238, 238);"><div style="display:flex;height:100%;align-items:center;justify-content:center;flex-direction:column;">
+                    <div style="margin-bottom:10px;font-style:italic;color:#666;">Mapa de distribuição geográfica seria exibido aqui</div>
+                    <div style="font-size:12px;color:#888;">Utilizaria API do Google Maps ou similar</div>
+                </div></div>
+                    <div class="flex justify-between mt-4 text-sm text-gray-500">
+                        <div><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> Visitas Pendentes</div>
+                        <div><i class="fas fa-check-circle text-green-500 mr-1"></i> Visitas Realizadas</div>
+                        <div><i class="fas fa-home asmara-text-primary mr-1"></i> Sede ONG</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="space-y-8">
+                <!-- Formulário de Agendamento -->
+                <section id="agendamentoForm" class="page-section bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Agendar Visita</h2>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="dataVisita">
+                                Data e Hora
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline flatpickr-input" id="dataVisita" type="text" placeholder="Selecione data e hora" readonly="readonly">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="mara">
+                                Mara / Liga
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="mara">
+                                <option value="">Selecione uma Mara ou Liga</option>
+                                <option value="1">Simone Silva do Nascimento</option>
+                                <option value="2">Andréia Nair Vieira Leite</option>
+                                <option value="3">Zilda Luiz da Silva</option>
+                                <option value="4">Liga Associação Rede Acessibilidade</option>
+                                <option value="5">Liga Instituto Eclesia Movement</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="objetivo">
+                                Objetivo da Visita
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="objetivo">
+                                <option value="">Selecione um objetivo</option>
+                                <option value="treinamento">Treinamento</option>
+                                <option value="acompanhamento">Acompanhamento</option>
+                                <option value="credito">Concessão de Microcrédito</option>
+                                <option value="cobranca">Cobrança</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="observacoes">
+                                Observações
+                            </label>
+                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="observacoes" rows="3" placeholder="Observações adicionais..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="lembrete">
+                                Lembrete
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="lembrete">
+                                <option value="1h">1 hora antes</option>
+                                <option value="3h">3 horas antes</option>
+                                <option value="1d" selected="">1 dia antes</option>
+                                <option value="2d">2 dias antes</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                                Cancelar
+                            </button>
+                            <button type="button" class="btn-asmara font-bold py-2 px-4 rounded">
+                                Agendar Visita
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Próximas Visitas -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Próximas Visitas</h2>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-sync-alt mr-1"></i> Atualizado hoje
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="visit-card bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Simone Silva</span>
+                                <span class="text-sm text-gray-500">Amanhã, 14:00</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Acompanhamento de vendas</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Pendente</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visit-card reminder bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Liga Rede Acessibilidade</span>
+                                <span class="text-sm text-gray-500">27/04/2025, 10:30</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Treinamento de novos produtos</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Lembrete Enviado</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visit-card bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Andréia Nair</span>
+                                <span class="text-sm text-gray-500">30/04/2025, 15:45</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Concessão de Microcrédito</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Pendente</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button class="text-sm asmara-text-primary hover:underline">Ver todas as visitas</button>
+                    </div>
+                </section>
+
+                <!-- Lembretes -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Lembretes</h2>
+                    <div class="space-y-3">
+                        <div class="reminder bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Visita - Simone Silva</span>
+                                <span class="text-sm text-gray-500">Em 24 horas</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Acompanhamento de vendas - Lembre-se de trazer o catálogo novo</div>
+                        </div>
+                        <div class="reminder bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Prazo de Microcrédito</span>
+                                <span class="text-sm text-gray-500">Em 3 dias</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Vencimento de parcela - Liga Instituto Eclesia Movement</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Histórico de Visitas Realizadas -->
+        <section class="page-section bg-white rounded-lg shadow-md p-6 mt-8">
+            <h2 class="text-xl font-bold mb-4">Histórico de Visitas</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data e Hora</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mara/Liga</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Objetivo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resultados</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/04/2025, 14:30</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Zilda Luiz da Silva</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Treinamento</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Treinamento concluído com sucesso, pedido de R$ 499,00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/04/2025, 09:15</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Liga Rede Acessibilidade</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Acompanhamento</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">6 Maras presentes, revisão de metas do trimestre</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">05/04/2025, 16:00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Patricia Oliveira</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Cobrança</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Cancelada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Mara não estava disponível, remarcado</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/04/2025, 10:00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Simone Silva do Nascimento</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Concessão de Microcrédito</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Concedido R$ 481,77 em microcrédito</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <a href="https://wlsrltnp.genspark.space/#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Previous</span>
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="https://wlsrltnp.genspark.space/#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        1
+                    </a>
+                    <a href="https://wlsrltnp.genspark.space/#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        2
+                    </a>
+                    <a href="https://wlsrltnp.genspark.space/#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        3
+                    </a>
+                    <a href="https://wlsrltnp.genspark.space/#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Next</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Registro de Anotações e Follow-up -->
+        <section class="page-section bg-white rounded-lg shadow-md p-6 mt-8">
+            <h2 class="text-xl font-bold mb-4">Registro de Anotações e Follow-ups</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Adicionar Nova Anotação</h3>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="maraFollowup">
+                                Mara / Liga
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="maraFollowup">
+                                <option value="">Selecione uma Mara ou Liga</option>
+                                <option value="1">Simone Silva do Nascimento</option>
+                                <option value="2">Andréia Nair Vieira Leite</option>
+                                <option value="3">Zilda Luiz da Silva</option>
+                                <option value="4">Liga Associação Rede Acessibilidade</option>
+                                <option value="5">Liga Instituto Eclesia Movement</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="tipoAnotacao">
+                                Tipo de Anotação
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="tipoAnotacao">
+                                <option value="">Selecione</option>
+                                <option value="followup">Follow-up de Visita</option>
+                                <option value="observacao">Observação Geral</option>
+                                <option value="problema">Problema Identificado</option>
+                                <option value="oportunidade">Oportunidade de Negócio</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="conteudoAnotacao">
+                                Conteúdo
+                            </label>
+                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="conteudoAnotacao" rows="4" placeholder="Detalhes da anotação..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="proximaAcao">
+                                Próxima Ação Necessária
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="proximaAcao" type="text" placeholder="Próxima ação...">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" class="btn-asmara font-bold py-2 px-4 rounded">
+                                Salvar Anotação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Últimas Anotações</h3>
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Follow-up: Zilda Luiz da Silva</span>
+                                <span class="text-xs text-gray-500">15/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Treinamento concluído com sucesso. Mara demonstrou grande interesse nos novos produtos de beleza. 
+                                Ficou de aplicar as técnicas de venda sugeridas.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Checar resultados em 7 dias
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Problema: Liga Instituto Eclesia Movement</span>
+                                <span class="text-xs text-gray-500">10/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Identificada dificuldade na compreensão dos novos formulários de microcrédito. 
+                                Gestor da liga solicitou treinamento adicional.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Agendar treinamento específico para formulários
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Oportunidade: Simone Silva do Nascimento</span>
+                                <span class="text-xs text-gray-500">01/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Mara tem potencial para se tornar líder de uma nova liga na região. 
+                                Demonstrou excelentes habilidades de comunicação e liderança natural.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Discutir possibilidade de promoção
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 asmara-border-primary bg-pink-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Observação: Patricia Oliveira</span>
+                                <span class="text-xs text-gray-500">05/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Segunda visita cancelada consecutivamente. Entrar em contato para 
+                                verificar se há algum problema que esteja dificultando sua participação.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Contato telefônico prioritário
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="asmara-bg-primary text-white py-4 mt-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>ASMARA Gestão de Ligas © 2025 | A Força de Renda da Favela</p>
+            <p class="text-sm mt-1">Dados atualizados em: Abril/2025</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="./ASMARA Gestão de Ligas - Agenda de Visitas_files/flatpickr"></script>
+    <script src="./ASMARA Gestão de Ligas - Agenda de Visitas_files/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa o seletor de data
+            flatpickr("#dataVisita", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i",
+                time_24hr: true,
+                minDate: "today"
+            });
+
+            // Inicializa o calendário
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listWeek'
+                },
+                locale: 'pt-br',
+                events: [
+                    {
+                        title: 'Visita - Simone Silva',
+                        start: '2025-04-22T14:00:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Treinamento - Liga Rede Acessibilidade',
+                        start: '2025-04-27T10:30:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Microcrédito - Andréia Nair',
+                        start: '2025-04-30T15:45:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Visita Realizada - Zilda Luiz',
+                        start: '2025-04-15T14:30:00',
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        title: 'Acompanhamento - Liga Rede Acessibilidade',
+                        start: '2025-04-10T09:15:00',
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        title: 'Visita Cancelada - Patricia',
+                        start: '2025-04-05T16:00:00',
+                        backgroundColor: '#ef4444'
+                    },
+                    {
+                        title: 'Microcrédito - Simone Silva',
+                        start: '2025-04-01T10:00:00',
+                        backgroundColor: '#10b981'
+                    }
+                ],
+                eventClick: function(info) {
+                    alert('Evento: ' + info.event.title);
+                }
+            });
+            calendar.render();
+
+            // Simula o mapa (em uma implementação real, seria usado Google Maps ou similar)
+            const mapElement = document.getElementById('map');
+            if (mapElement) {
+                mapElement.style.background = '#eee';
+                mapElement.innerHTML = `<div style="display:flex;height:100%;align-items:center;justify-content:center;flex-direction:column;">
+                    <div style="margin-bottom:10px;font-style:italic;color:#666;">Mapa de distribuição geográfica seria exibido aqui</div>
+                    <div style="font-size:12px;color:#888;">Utilizaria API do Google Maps ou similar</div>
+                </div>`;
+            }
+
+            // Toggle do formulário de agendamento
+            const newVisitBtn = document.getElementById('newVisitBtn');
+            const agendamentoForm = document.getElementById('agendamentoForm');
+            if (newVisitBtn && agendamentoForm) {
+                newVisitBtn.addEventListener('click', function() {
+                    agendamentoForm.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDpNbMp7UdWNMNJIkRgx6eHPXnEfChLeoWFcCaLcSPMcrL4McIf8FO6Y8XvQTGNjmY8tY93mExBCcPf3X1E45MbbjsZrSuIXTCCltnrTp5%2BK8AXipeMRS4mL0DAqflaqbleEl6SkI9WOQZ3XSGEVLt4IIV2isGZ%2BdnT8L5UpnKWvsKobiIG4Yd3Q9Uf%2BaEyuT4Y2j9PTyWgpa41%2BkfCi4fjIHWx%2FF3RI4ooVWfEQOToA895eooBpTj%2B3N0xsTZMjJBVEPzO0hjBjKAHJFvtkq6%2BuhvxKDctt1nE3eLY5Y8XT%2B34l6njKtygaGWvksBQ03pgrTu3t4aki8nJIIpKuiUQZXNW6Mt%2Bab37iCM379n8WkxoJKJPcOaDYnNrwVlDxYPZakRO3mPX4l1DJxv1v1zhcY%2BNOesC6wEP8oKBS0MuZfnkVW6%2B6HnoIHMGiXMJFW%2B9RjewAEsaSkCDJgrayHlUTpHn2n7lSr0aC7Iwp92UMLbb9beK1FztSYDuV6Wp%2FIqA%3D%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDpNbMp7UdWNMNJIkRgx6eHPXnEfChLeoWFcCaLcSPMcrL4McIf8FO6Y8XvQTGNjmY8tY93mExBCcPf3X1E45MbbjsZrSuIXTCCltnrTp5+K8AXipeMRS4mL0DAqflaqbleEl6SkI9WOQZ3XSGEVLt4IIV2isGZ+dnT8L5UpnKWvsKobiIG4Yd3Q9Uf+aEyuT4Y2j9PTyWgpa41+kfCi4fjIHWx/F3RI4ooVWfEQOToA895eooBpTj+3N0xsTZMjJBVEPzO0hjBjKAHJFvtkq6+uhvxKDctt1nE3eLY5Y8XT+34l6njKtygaGWvksBQ03pgrTu3t4aki8nJIIpKuiUQZXNW6Mt+ab37iCM379n8WkxoJKJPcOaDYnNrwVlDxYPZakRO3mPX4l1DJxv1v1zhcY+NOesC6wEP8oKBS0MuZfnkVW6+6HnoIHMGiXMJFW+9RjewAEsaSkCDJgrayHlUTpHn2n7lSr0aC7Iwp92UMLbb9beK1FztSYDuV6Wp/IqA==";
+    </script>
+    <div class="flatpickr-calendar hasTime animate" tabindex="-1"><div class="flatpickr-months"><span class="flatpickr-prev-month flatpickr-disabled"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 17 17"><g></g><path d="M5.207 8.471l7.146 7.147-0.707 0.707-7.853-7.854 7.854-7.853 0.707 0.707-7.147 7.146z"></path></svg></span><div class="flatpickr-month"><div class="flatpickr-current-month"><select class="flatpickr-monthDropdown-months" aria-label="Month" tabindex="-1"><option class="flatpickr-monthDropdown-month" value="3" tabindex="-1">April</option><option class="flatpickr-monthDropdown-month" value="4" tabindex="-1">May</option><option class="flatpickr-monthDropdown-month" value="5" tabindex="-1">June</option><option class="flatpickr-monthDropdown-month" value="6" tabindex="-1">July</option><option class="flatpickr-monthDropdown-month" value="7" tabindex="-1">August</option><option class="flatpickr-monthDropdown-month" value="8" tabindex="-1">September</option><option class="flatpickr-monthDropdown-month" value="9" tabindex="-1">October</option><option class="flatpickr-monthDropdown-month" value="10" tabindex="-1">November</option><option class="flatpickr-monthDropdown-month" value="11" tabindex="-1">December</option></select><div class="numInputWrapper"><input class="numInput cur-year" type="number" tabindex="-1" aria-label="Year" min="2025"><span class="arrowUp"></span><span class="arrowDown"></span></div></div></div><span class="flatpickr-next-month"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 17 17"><g></g><path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z"></path></svg></span></div><div class="flatpickr-innerContainer"><div class="flatpickr-rContainer"><div class="flatpickr-weekdays"><div class="flatpickr-weekdaycontainer">
+      <span class="flatpickr-weekday">
+        Sun</span><span class="flatpickr-weekday">Mon</span><span class="flatpickr-weekday">Tue</span><span class="flatpickr-weekday">Wed</span><span class="flatpickr-weekday">Thu</span><span class="flatpickr-weekday">Fri</span><span class="flatpickr-weekday">Sat
+      </span>
+      </div></div><div class="flatpickr-days" tabindex="-1"><div class="dayContainer"><span class="flatpickr-day prevMonthDay flatpickr-disabled" aria-label="March 30, 2025">30</span><span class="flatpickr-day prevMonthDay flatpickr-disabled" aria-label="March 31, 2025">31</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 1, 2025">1</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 2, 2025">2</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 3, 2025">3</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 4, 2025">4</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 5, 2025">5</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 6, 2025">6</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 7, 2025">7</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 8, 2025">8</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 9, 2025">9</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 10, 2025">10</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 11, 2025">11</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 12, 2025">12</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 13, 2025">13</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 14, 2025">14</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 15, 2025">15</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 16, 2025">16</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 17, 2025">17</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 18, 2025">18</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 19, 2025">19</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 20, 2025">20</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 21, 2025">21</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 22, 2025">22</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 23, 2025">23</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 24, 2025">24</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 25, 2025">25</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 26, 2025">26</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 27, 2025">27</span><span class="flatpickr-day flatpickr-disabled" aria-label="April 28, 2025">28</span><span class="flatpickr-day today" aria-label="April 29, 2025" aria-current="date" tabindex="-1">29</span><span class="flatpickr-day" aria-label="April 30, 2025" tabindex="-1">30</span><span class="flatpickr-day nextMonthDay" aria-label="May 1, 2025" tabindex="-1">1</span><span class="flatpickr-day nextMonthDay" aria-label="May 2, 2025" tabindex="-1">2</span><span class="flatpickr-day nextMonthDay" aria-label="May 3, 2025" tabindex="-1">3</span><span class="flatpickr-day nextMonthDay" aria-label="May 4, 2025" tabindex="-1">4</span><span class="flatpickr-day nextMonthDay" aria-label="May 5, 2025" tabindex="-1">5</span><span class="flatpickr-day nextMonthDay" aria-label="May 6, 2025" tabindex="-1">6</span><span class="flatpickr-day nextMonthDay" aria-label="May 7, 2025" tabindex="-1">7</span><span class="flatpickr-day nextMonthDay" aria-label="May 8, 2025" tabindex="-1">8</span><span class="flatpickr-day nextMonthDay" aria-label="May 9, 2025" tabindex="-1">9</span><span class="flatpickr-day nextMonthDay" aria-label="May 10, 2025" tabindex="-1">10</span></div></div></div></div><div class="flatpickr-time time24hr" tabindex="-1"><div class="numInputWrapper"><input class="numInput flatpickr-hour" type="number" aria-label="Hour" tabindex="-1" step="1" min="0" max="23" maxlength="2"><span class="arrowUp"></span><span class="arrowDown"></span></div><span class="flatpickr-time-separator">:</span><div class="numInputWrapper"><input class="numInput flatpickr-minute" type="number" aria-label="Minute" tabindex="-1" step="5" min="0" max="59" maxlength="2"><span class="arrowUp"></span><span class="arrowDown"></span></div></div></div></body></html>
