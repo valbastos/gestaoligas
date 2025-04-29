@@ -4,8 +4,8 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASMARA Gestão de Ligas</title>
-    <link href="./dashboard-super-adm_files/tailwind.min.css" rel="stylesheet">
-    <script src="./dashboard-super-adm_files/chart.min.js"></script>
+    <link href="./dashboard-produtos_files/tailwind.min.css" rel="stylesheet">
+    <script src="./dashboard-produtos_files/chart.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -135,12 +135,12 @@
         <div class="container mx-auto">
             <ul class="flex">
                 <li>
-                    <button id="homeTab" class="px-4 py-3 text-gray-700 font-medium border-b-2 border-pink-500">
+                    <button id="homeTab" class="px-4 py-3 font-medium border-b-2 border-transparent text-gray-500">
                         Início
                     </button>
                 </li>
                 <li>
-                    <button id="gerencialTab" class="px-4 py-3 text-gray-500 hover:text-gray-700 font-medium border-b-2 border-transparent">
+                    <button id="gerencialTab" class="px-4 py-3 text-gray-500 hover:text-gray-700 font-medium border-b-2 border-transparent border-pink-500 text-gray-700">
                         Visão Gerencial
                     </button>
                 </li>
@@ -161,7 +161,7 @@
     <!-- Content Container -->
     <div class="container mx-auto py-6">
         <!-- Home Content -->
-        <div id="homeContent" class="tab-content active">
+        <div id="homeContent" class="tab-content">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="asmara-card hover:shadow-lg transition-shadow cursor-pointer" onclick="activateTab(&#39;gerencialTab&#39;)">
                     <h2 class="text-xl font-bold mb-3 asmara-pink-text">Visão Gerencial</h2>
@@ -270,7 +270,7 @@
         </div>
 
         <!-- Visão Gerencial (Super ADM) -->
-        <div id="gerencialContent" class="tab-content">
+        <div id="gerencialContent" class="tab-content active">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold">Dashboard Super ADM</h2>
                 <div class="flex space-x-3">
@@ -429,12 +429,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div class="asmara-card">
                     <h3 class="font-bold text-lg mb-4">Faturamento por ONG</h3>
-                    <canvas id="salesChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                    <canvas id="salesChart" height="980" style="display: block; box-sizing: border-box; height: 490px; width: 588px;" width="1176"></canvas>
                 </div>
                 
                 <div class="asmara-card">
                     <h3 class="font-bold text-lg mb-4">Taxa de Inadimplência por ONG</h3>
-                    <canvas id="debtChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                    <canvas id="debtChart" height="980" style="display: block; box-sizing: border-box; height: 490px; width: 588px;" width="1176"></canvas>
                 </div>
             </div>
 
@@ -587,7 +587,7 @@
             
             <div class="mt-6 asmara-card">
                 <h3 class="font-bold text-lg mb-4">Análise de Tendências</h3>
-                <canvas id="trendChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                <canvas id="trendChart" height="2066" style="display: block; box-sizing: border-box; height: 1033px; width: 1240px;" width="2480"></canvas>
             </div>
         </div>
 
@@ -766,7 +766,7 @@
                                 <p class="text-xl font-bold">R$ 12.201,63</p>
                             </div>
                         </div>
-                        <canvas id="microcreditStatusChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                        <canvas id="microcreditStatusChart" height="740" style="display: block; box-sizing: border-box; height: 370px; width: 370.5px;" width="741"></canvas>
                     </div>
                 </div>
                 
@@ -783,7 +783,7 @@
                                 <p class="text-xl font-bold">R$ 20.217,74</p>
                             </div>
                         </div>
-                        <canvas id="leaguesChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                        <canvas id="leaguesChart" height="740" style="display: block; box-sizing: border-box; height: 370px; width: 370.5px;" width="741"></canvas>
                     </div>
                 </div>
                 
@@ -812,12 +812,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="asmara-card">
                     <h3 class="font-bold text-lg mb-4">Top 10 Produtos por Valor de Vendas</h3>
-                    <canvas id="topProductsValueChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                    <canvas id="topProductsValueChart" height="1176" style="display: block; box-sizing: border-box; height: 588px; width: 588px;" width="1176"></canvas>
                 </div>
                 
                 <div class="asmara-card">
                     <h3 class="font-bold text-lg mb-4">Top 10 Produtos por Quantidade Vendida</h3>
-                    <canvas id="topProductsQuantityChart" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas>
+                    <canvas id="topProductsQuantityChart" height="1176" style="display: block; box-sizing: border-box; height: 588px; width: 588px;" width="1176"></canvas>
                 </div>
             </div>
         </div>

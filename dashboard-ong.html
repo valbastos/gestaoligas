@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://kslwjhkz.genspark.space/ -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Dashboard ONG</title>
+    <link href="./dashboard-ong_files/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./dashboard-ong_files/all.min.css">
+    <script src="./dashboard-ong_files/chart.min.js"></script>
+    <style>
+        :root {
+            --asmara-pink: #FF0066;
+            --asmara-pink-light: #ff4d8c;
+            --asmara-pink-dark: #cc0052;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .asmara-bg {
+            background-color: var(--asmara-pink);
+        }
+        .asmara-text {
+            color: var(--asmara-pink);
+        }
+        .asmara-border {
+            border-color: var(--asmara-pink);
+        }
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+        }
+        .card-body {
+            padding: 1rem;
+        }
+        .indicator {
+            height: 8px;
+            width: 150px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .indicator-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .good {
+            background-color: #28a745;
+        }
+        .medium {
+            background-color: #ffc107;
+        }
+        .bad {
+            background-color: #dc3545;
+        }
+        .alert-box {
+            border-left: 4px solid;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            background-color: #fff8f8;
+        }
+        .alert-danger {
+            border-left-color: #dc3545;
+        }
+        .alert-warning {
+            border-left-color: #ffc107;
+        }
+        .nav-button {
+            transition: all 0.3s ease;
+        }
+        .nav-button:hover {
+            transform: translateY(-2px);
+        }
+         {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="p-6">
+    <!-- Cabeçalho -->
+    <header class="mb-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <div class="flex items-center">
+                <div class="mr-4">
+                    <h1 class="text-3xl font-bold asmara-text">ASMARA Gestão de Ligas</h1>
+                    <p class="text-gray-600">Dashboard ASSOCIACAO REDE ACESSIBILIDADE</p>
+                </div>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <p class="text-gray-600">Dados atualizados em: <span class="font-semibold">Abril/2025</span></p>
+                <p class="text-gray-600">Usuário: <span class="font-semibold">Líder ONG</span></p>
+            </div>
+        </div>
+        <div class="w-full h-2 asmara-bg rounded-full"></div>
+    </header>
+
+    <!-- KPIs Principais -->
+    <section class="mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Total de Vendas -->
+            <div class="card">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Total de Vendas</p>
+                            <h2 class="text-2xl font-bold">R$ 12.338,87</h2>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-up"></i> 8.5% vs mês anterior</p>
+                        </div>
+                        <div class="asmara-bg rounded-full p-3 text-white">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Número de Maras Ativas -->
+            <div class="card">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Maras Ativas</p>
+                            <h2 class="text-2xl font-bold">18 / 25</h2>
+                            <p class="text-yellow-500 text-sm"><i class="fas fa-minus"></i> Mesmo do mês anterior</p>
+                        </div>
+                        <div class="asmara-bg rounded-full p-3 text-white">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taxa de Conversão -->
+            <div class="card">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Taxa de Conversão</p>
+                            <h2 class="text-2xl font-bold">21,1%</h2>
+                            <p class="text-red-500 text-sm"><i class="fas fa-arrow-down"></i> 2.3% vs mês anterior</p>
+                        </div>
+                        <div class="asmara-bg rounded-full p-3 text-white">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taxa de Inadimplência -->
+            <div class="card">
+                <div class="p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm">Taxa de Inadimplência</p>
+                            <h2 class="text-2xl font-bold">12%</h2>
+                            <p class="text-green-500 text-sm"><i class="fas fa-arrow-down"></i> 5% vs mês anterior</p>
+                        </div>
+                        <div class="asmara-bg rounded-full p-3 text-white">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gráficos e Tabelas Principais -->
+    <section class="mb-8 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Desempenho das Ligas -->
+        <div class="card">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Desempenho das Ligas</h3>
+            </div>
+            <div class="card-body h-64">
+                <canvas id="ligasChart" style="display: block; box-sizing: border-box; height: 224px; width: 652px;" width="1304" height="448"></canvas>
+            </div>
+        </div>
+
+        <!-- Top 5 Maras -->
+        <div class="card">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Top 5 Maras - Maiores Vendas</h3>
+            </div>
+            <div class="card-body">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Nome</th>
+                                <th class="text-right py-2">Vendas</th>
+                                <th class="text-right py-2">Itens</th>
+                                <th class="text-right py-2">Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-3">
+                                    <div class="font-semibold">SIMONE SILVA DO NASCIMENTO</div>
+                                </td>
+                                <td class="text-right">R$ 4.172,59</td>
+                                <td class="text-right">64</td>
+                                <td class="text-right">
+                                    <div class="flex justify-end items-center">
+                                        <div class="indicator mr-2">
+                                            <div class="indicator-bar good" style="width: 90%"></div>
+                                        </div>
+                                        <span>90%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">
+                                    <div class="font-semibold">ZILDA LUIZ DA SILVA</div>
+                                </td>
+                                <td class="text-right">R$ 1.665,51</td>
+                                <td class="text-right">32</td>
+                                <td class="text-right">
+                                    <div class="flex justify-end items-center">
+                                        <div class="indicator mr-2">
+                                            <div class="indicator-bar good" style="width: 75%"></div>
+                                        </div>
+                                        <span>75%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">
+                                    <div class="font-semibold">PATRICIA OLIVEIRA SOUZA</div>
+                                </td>
+                                <td class="text-right">R$ 1.436,85</td>
+                                <td class="text-right">106</td>
+                                <td class="text-right">
+                                    <div class="flex justify-end items-center">
+                                        <div class="indicator mr-2">
+                                            <div class="indicator-bar good" style="width: 70%"></div>
+                                        </div>
+                                        <span>70%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">
+                                    <div class="font-semibold">MARCIA STORTI DOS SANTOS</div>
+                                </td>
+                                <td class="text-right">R$ 646,75</td>
+                                <td class="text-right">8</td>
+                                <td class="text-right">
+                                    <div class="flex justify-end items-center">
+                                        <div class="indicator mr-2">
+                                            <div class="indicator-bar medium" style="width: 55%"></div>
+                                        </div>
+                                        <span>55%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-3">
+                                    <div class="font-semibold">LUCIMAR DE SIQUEIRA SANTOS</div>
+                                </td>
+                                <td class="text-right">R$ 577,49</td>
+                                <td class="text-right">34</td>
+                                <td class="text-right">
+                                    <div class="flex justify-end items-center">
+                                        <div class="indicator mr-2">
+                                            <div class="indicator-bar medium" style="width: 45%"></div>
+                                        </div>
+                                        <span>45%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mix de Produtos e Alertas -->
+    <section class="mb-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Mix de Produtos -->
+        <div class="card lg:col-span-2">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Mix de Produtos Mais Vendidos</h3>
+            </div>
+            <div class="card-body grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="h-64">
+                    <canvas id="mixProdutosChart" style="display: block; box-sizing: border-box; height: 256px; width: 436px;" width="872" height="512"></canvas>
+                </div>
+                <div>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <span>CAIXA AMPLIF. MCO 8 BIVOLT</span>
+                            <span class="font-semibold">R$ 3.289,00</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <span>LIQUIDIF... CS L- 99</span>
+                            <span class="font-semibold">R$ 3.629,67</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <span>BLUSA MANGA CURTA FEM</span>
+                            <span class="font-semibold">R$ 509,63</span>
+                        </li>
+                        <li class="flex justify-between items-center border-b pb-2">
+                            <span>BLUSA ALÇINHA FEM</span>
+                            <span class="font-semibold">R$ 639,47</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span>OUTROS</span>
+                            <span class="font-semibold">R$ 4.271,10</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alertas -->
+        <div class="card">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Alertas</h3>
+            </div>
+            <div class="card-body space-y-4">
+                <div class="alert-box alert-danger">
+                    <h4 class="font-bold text-red-600">Alta Inadimplência</h4>
+                    <p>3 Maras com inadimplência acima de 50% do microcrédito</p>
+                </div>
+                <div class="alert-box alert-warning">
+                    <h4 class="font-bold text-yellow-600">Maras sem Atividade</h4>
+                    <p>7 Maras não registraram vendas no mês atual</p>
+                </div>
+                <div class="alert-box alert-warning">
+                    <h4 class="font-bold text-yellow-600">Microcrédito não Convertido</h4>
+                    <p>R$ 1.657,29 em microcrédito não convertido em vendas</p>
+                </div>
+                <div class="alert-box" style="border-left-color: #28a745;">
+                    <h4 class="font-bold text-green-600">Destaque</h4>
+                    <p>SIMONE SILVA alcançou 90% da meta mensal</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status do Microcrédito -->
+    <section class="mb-8">
+        <div class="card">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Eficiência de Microcrédito</h3>
+            </div>
+            <div class="card-body">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2">Indicador</th>
+                                <th class="text-right py-2">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-3">Crédito Concedido</td>
+                                <td class="text-right font-semibold">R$ 8.191,89</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">Valor Vendido</td>
+                                <td class="text-right font-semibold">R$ 1.728,16</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">Saldo Devedor</td>
+                                <td class="text-right font-semibold text-red-500">R$ 1.657,29</td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-3">Taxa de Conversão</td>
+                                <td class="text-right font-semibold">21,1%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 bg-gray-100 p-4 rounded-lg">
+                    <h4 class="font-semibold mb-2">Eficiência</h4>
+                    <div class="w-full bg-gray-300 rounded-full h-4">
+                        <div class="bg-yellow-500 h-4 rounded-full" style="width: 21.1%"></div>
+                    </div>
+                    <div class="mt-2 flex justify-between text-sm text-gray-600">
+                        <span>0%</span>
+                        <span>21.1% (Atual)</span>
+                        <span>Meta: 40%</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navegação -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <button class="nav-button asmara-bg text-white py-3 px-6 rounded-lg flex items-center justify-center font-semibold">
+            <i class="fas fa-trophy mr-2"></i> Ver Gamificação
+        </button>
+        <button class="nav-button asmara-bg text-white py-3 px-6 rounded-lg flex items-center justify-center font-semibold">
+            <i class="fas fa-calendar-alt mr-2"></i> Agenda de Visitas
+        </button>
+        <button class="nav-button asmara-bg text-white py-3 px-6 rounded-lg flex items-center justify-center font-semibold">
+            <i class="fas fa-sync-alt mr-2"></i> Atualizar Dados
+        </button>
+    </section>
+
+    <!-- Rodapé -->
+    <footer class="text-center pt-8 pb-4 text-gray-500 text-sm">
+        <p>ASMARA Gestão de Ligas © 2025 | Dashboard ONG</p>
+        <p>A Força de Renda da Favela</p>
+    </footer>
+
+    <script>
+        // Gráfico de Desempenho das Ligas
+        const ligasCtx = document.getElementById('ligasChart').getContext('2d');
+        new Chart(ligasCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril'],
+                datasets: [{
+                    label: 'Vendas (R$)',
+                    data: [8200, 8900, 10100, 12338],
+                    backgroundColor: '#FF0066',
+                    borderColor: '#CC0052',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `R$ ${context.parsed.y.toLocaleString('pt-BR')}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return `R$ ${value.toLocaleString('pt-BR')}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gráfico de Mix de Produtos
+        const mixCtx = document.getElementById('mixProdutosChart').getContext('2d');
+        new Chart(mixCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'CAIXA AMPLIF.',
+                    'LIQUIDIFICADOR',
+                    'BLUSA MANGA CURTA',
+                    'BLUSA ALÇINHA',
+                    'OUTROS'
+                ],
+                datasets: [{
+                    data: [3289, 3629, 509, 639, 4271],
+                    backgroundColor: [
+                        '#FF0066',
+                        '#FF4D8C',
+                        '#FF80B3',
+                        '#FFB3D9',
+                        '#FFE6F2'
+                    ],
+                    borderWidth: 1,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 15,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((acc, data) => acc + data, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `R$ ${value.toLocaleString('pt-BR')} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDhwrMMeAvFuGUmNmABOwde%2FzH7W7gWpXOw5oHRlhWAEAEG%2BFXlonUkR%2FOIRQpZNCdOwPwfG8J0nCbeGqzo7swfORZtdgrtE8UZRqK2DSB3PHeO50Ak5UD0Bqe1Iamzrhr30QVT0DDnaRVejJSfPvUtrf1lmdoYA8XnCCAqCkE72hOpOe7ELmKysAiSmojkQxoRPTSj9HZWc6VxfBm0mXv%2F6AIV7YAu0AQAG2o0xlB9DNBsnusIYjhFUJqCk%2Fd2gA50f%2FhUNeZuvP%2Bj6WUYoEFU5ysJ6nJufoTTuqKLxUEe5xt6CthOR55fUTuhroDeP4QYP8pMGBB3lSkVnpJVOOhOBeHgeWHBfEOJLalW4ZotuFRYYYvgXpllu%2FimOhDf3P8mn3On4ggHvxzZ0gBXpbTUD%2BFTimTKayIvhsMDY%2BXyn9jKwTkxaLqIsenDUlifqNmVypg25x%2Bs81Vd1MP9KFOmOIN8A%2BxO9YR7LbLjJIt1Em%2BaRQLAuvl3U3sM8XTl7EZQ%3D%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDhwrMMeAvFuGUmNmABOwde/zH7W7gWpXOw5oHRlhWAEAEG+FXlonUkR/OIRQpZNCdOwPwfG8J0nCbeGqzo7swfORZtdgrtE8UZRqK2DSB3PHeO50Ak5UD0Bqe1Iamzrhr30QVT0DDnaRVejJSfPvUtrf1lmdoYA8XnCCAqCkE72hOpOe7ELmKysAiSmojkQxoRPTSj9HZWc6VxfBm0mXv/6AIV7YAu0AQAG2o0xlB9DNBsnusIYjhFUJqCk/d2gA50f/hUNeZuvP+j6WUYoEFU5ysJ6nJufoTTuqKLxUEe5xt6CthOR55fUTuhroDeP4QYP8pMGBB3lSkVnpJVOOhOBeHgeWHBfEOJLalW4ZotuFRYYYvgXpllu/imOhDf3P8mn3On4ggHvxzZ0gBXpbTUD+FTimTKayIvhsMDY+Xyn9jKwTkxaLqIsenDUlifqNmVypg25x+s81Vd1MP9KFOmOIN8A+xO9YR7LbLjJIt1Em+aRQLAuvl3U3sM8XTl7EZQ==";
+    </script>
+    </body></html>

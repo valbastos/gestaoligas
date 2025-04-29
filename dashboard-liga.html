@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://fthyyxwl.genspark.space/ -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Dashboard Gestor de Liga</title>
+    <link href="./dashboard-liga_files/tailwind.min.css" rel="stylesheet">
+    <link href="./dashboard-liga_files/all.min.css" rel="stylesheet">
+    <script src="./dashboard-liga_files/chart.min.js"></script>
+    <style>
+        :root {
+            --asmara-pink: #FF0066;
+            --asmara-pink-light: #FF99B8;
+            --asmara-pink-dark: #CC0052;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .asmara-bg-pink {
+            background-color: var(--asmara-pink);
+        }
+        .asmara-bg-pink-light {
+            background-color: var(--asmara-pink-light);
+        }
+        .asmara-text-pink {
+            color: var(--asmara-pink);
+        }
+        .asmara-border-pink {
+            border-color: var(--asmara-pink);
+        }
+        .asmara-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .status-positive {
+            color: #10B981;
+        }
+        .status-warning {
+            color: #F59E0B;
+        }
+        .status-negative {
+            color: #EF4444;
+        }
+        .status-dot {
+            height: 10px;
+            width: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+        .dot-green {
+            background-color: #10B981;
+        }
+        .dot-yellow {
+            background-color: #F59E0B;
+        }
+        .dot-red {
+            background-color: #EF4444;
+        }
+        .performance-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #E5E7EB;
+            overflow: hidden;
+        }
+        .performance-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        .action-button {
+            transition: transform 0.2s;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+         {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+        }
+        .full-height {
+            min-height: calc(100vh - 80px);
+        }
+    </style>
+</head>
+<body class="mx-auto p-4 max-w-7xl">
+    <!-- Cabeçalho -->
+    <header class="asmara-bg-pink text-white px-6 py-4 rounded-lg flex justify-between items-center mb-6">
+        <div class="flex items-center">
+            <div class="mr-4">
+                <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 10C27.9086 10 10 27.9086 10 50C10 72.0914 27.9086 90 50 90C72.0914 90 90 72.0914 90 50C90 27.9086 72.0914 10 50 10Z" fill="white"></path>
+                    <path d="M65 40C65 48.2843 58.2843 55 50 55C41.7157 55 35 48.2843 35 40C35 31.7157 41.7157 25 50 25C58.2843 25 65 31.7157 65 40Z" fill="white"></path>
+                    <path d="M25 70C25 63.9249 29.9249 59 36 59H64C70.0751 59 75 63.9249 75 70V75C75 77.7614 72.7614 80 70 80H30C27.2386 80 25 77.7614 25 75V70Z" fill="white"></path>
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold">ASMARA Gestão de Ligas</h1>
+                <p class="text-sm">Liga Estrela Ascendente</p>
+            </div>
+        </div>
+        <div class="text-right">
+            <p class="text-lg font-bold">Dashboard Gestor de Liga</p>
+            <p class="text-sm">Dados atualizados em: 30/04/2025</p>
+        </div>
+    </header>
+
+    <!-- KPIs Principais -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="asmara-card">
+            <p class="text-gray-500 text-sm">Total de Vendas</p>
+            <div class="flex justify-between items-end">
+                <h3 class="text-2xl font-bold">R$ 12.338,87</h3>
+                <span class="text-sm font-medium status-positive">+12.3% <i class="fas fa-arrow-up"></i></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">254 itens vendidos este mês</p>
+        </div>
+
+        <div class="asmara-card">
+            <p class="text-gray-500 text-sm">Maras Ativas</p>
+            <div class="flex justify-between items-end">
+                <h3 class="text-2xl font-bold">16</h3>
+                <span class="text-sm font-medium status-warning">-2 <i class="fas fa-arrow-down"></i></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">De um total de 18 Maras na liga</p>
+        </div>
+
+        <div class="asmara-card">
+            <p class="text-gray-500 text-sm">Ticket Médio</p>
+            <div class="flex justify-between items-end">
+                <h3 class="text-2xl font-bold">R$ 48,58</h3>
+                <span class="text-sm font-medium status-positive">+5.2% <i class="fas fa-arrow-up"></i></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Aumento de R$ 2,40 versus mês anterior</p>
+        </div>
+
+        <div class="asmara-card">
+            <p class="text-gray-500 text-sm">Taxa de Conversão</p>
+            <div class="flex justify-between items-end">
+                <h3 class="text-2xl font-bold">21,1%</h3>
+                <span class="text-sm font-medium status-negative">-2.3% <i class="fas fa-arrow-down"></i></span>
+            </div>
+            <p class="text-xs text-gray-500 mt-1">Microcrédito convertido em vendas</p>
+        </div>
+    </div>
+
+    <!-- Alertas de Gestão -->
+    <div class="asmara-card mb-6">
+        <h2 class="text-lg font-bold mb-3">Alertas de Gestão</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-red-50 border-l-4 border-red-500 p-3">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-circle text-red-500 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-red-800">Maras sem atividade</p>
+                        <p class="text-xs text-red-700 mt-1">2 Maras não registraram vendas nos últimos 30 dias</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-3">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-500 text-xl"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-yellow-800">Produtos com baixa performance</p>
+                        <p class="text-xs text-yellow-700 mt-1">3 produtos sem vendas nos últimos 15 dias</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico de Evolução Diária -->
+    <div class="asmara-card mb-6">
+        <h2 class="text-lg font-bold mb-3">Evolução Diária de Vendas - Abril/2025</h2>
+        <div class="h-64">
+            <canvas id="dailySalesChart" style="display: block; box-sizing: border-box; height: 256px; width: 1216px;" width="2432" height="512"></canvas>
+        </div>
+    </div>
+
+    <!-- Status de Microcrédito -->
+    <div class="asmara-card mb-6">
+        <h2 class="text-lg font-bold mb-3">Status de Microcrédito da Liga</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-gray-500 text-sm">Crédito Concedido</p>
+                <p class="text-xl font-bold">R$ 8.191,89</p>
+                <p class="text-xs text-gray-500 mt-1">Distribuído entre 14 Maras</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-gray-500 text-sm">Crédito Vendido</p>
+                <p class="text-xl font-bold">R$ 1.728,16</p>
+                <p class="text-xs text-gray-500 mt-1">21,1% do total concedido</p>
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg">
+                <p class="text-gray-500 text-sm">Saldo Devedor</p>
+                <p class="text-xl font-bold">R$ 1.657,29</p>
+                <p class="text-xs text-gray-500 mt-1">20,2% do total concedido</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h3 class="text-sm font-semibold mb-2">Progresso de Conversão</h3>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-pink-600 h-2.5 rounded-full" style="width: 21%"></div>
+            </div>
+            <div class="flex justify-between mt-1">
+                <span class="text-xs text-gray-500">0%</span>
+                <span class="text-xs text-gray-500">Meta: 50%</span>
+                <span class="text-xs text-gray-500">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Maras -->
+    <div class="asmara-card mb-6">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-lg font-bold">Maras da Liga</h2>
+            <div class="text-sm text-gray-500">Total: 18 Maras</div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mara</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendas</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Itens</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Microcrédito</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Simone S. Nascimento</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-green"></span>Ativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 4.172,59</td>
+                        <td class="px-6 py-4 whitespace-nowrap">64</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-positive">100% pago</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-green-500" style="width: 95%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Zilda Luiz da Silva</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-green"></span>Ativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 1.665,51</td>
+                        <td class="px-6 py-4 whitespace-nowrap">32</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-positive">100% pago</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-green-500" style="width: 80%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Patrícia O. Souza</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-green"></span>Ativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 1.436,85</td>
+                        <td class="px-6 py-4 whitespace-nowrap">106</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-warning">R$ 464,87 pendente</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-green-500" style="width: 70%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Marcia S. dos Santos</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-green"></span>Ativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 646,75</td>
+                        <td class="px-6 py-4 whitespace-nowrap">8</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-positive">100% pago</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-yellow-500" style="width: 55%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Quitéria R. de Almeida</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-green"></span>Ativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 573,93</td>
+                        <td class="px-6 py-4 whitespace-nowrap">7</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-warning">R$ 7,83 pendente</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-yellow-500" style="width: 50%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Vera F. Cardozo</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-red"></span>Inativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 0,00</td>
+                        <td class="px-6 py-4 whitespace-nowrap">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-negative">Não aplicável</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-red-500" style="width: 5%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">Luciene da C. Antônio</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-dot dot-red"></span>Inativa
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">R$ 0,00</td>
+                        <td class="px-6 py-4 whitespace-nowrap">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="status-negative">Não aplicável</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="performance-bar w-full">
+                                <div class="performance-fill bg-red-500" style="width: 5%"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Mix de Produtos -->
+    <div class="asmara-card mb-6">
+        <h2 class="text-lg font-bold mb-3">Mix de Produtos da Liga</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h3 class="text-sm font-semibold mb-2">Top Produtos por Valor</h3>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor</th>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Margem</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">LIQUIDIFICADOR CS L-99</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 9.239,16</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm status-positive">55,2%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">CAIXA AMPLIF. MCO 8 BIVOLT</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 8.970,00</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm status-positive">56,9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">BLUSA MANGA CURTA FEM</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 1.074,25</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm status-positive">99,7%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">BLUSA ALÇINHA FEM</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 789,36</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm status-positive">99,7%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">CONJUNTO BEBÊ INVERNO</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 629,79</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm status-positive">99,7%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <h3 class="text-sm font-semibold mb-2">Top Produtos por Quantidade</h3>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produto</th>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qtd</th>
+                            <th scope="col" class="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">LIQUIDIFICADOR CS L-99</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">84</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 9.239,16</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">BLUSA MANGA CURTA FEM</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">75</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 1.074,25</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">BLUSA ALÇINHA FEM</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">64</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 789,36</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">CAIXA AMPLIF. MCO 8 BIVOLT</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">30</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 8.970,00</td>
+                        </tr>
+                        <tr>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">CONJUNTO BEBÊ INVERNO</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">21</td>
+                            <td class="px-3 py-2 whitespace-nowrap text-sm">R$ 629,79</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Acesso Rápido -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="asmara-card action-button cursor-pointer">
+            <div class="flex items-center">
+                <div class="rounded-full p-3 mr-4 asmara-bg-pink text-white">
+                    <i class="fas fa-trophy text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold">Gamificação</h3>
+                    <p class="text-sm text-gray-500">Acompanhe o ranking e conquistas da sua liga</p>
+                </div>
+            </div>
+        </div>
+        <div class="asmara-card action-button cursor-pointer">
+            <div class="flex items-center">
+                <div class="rounded-full p-3 mr-4 asmara-bg-pink text-white">
+                    <i class="fas fa-calendar-alt text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-bold">Agenda de Visitas</h3>
+                    <p class="text-sm text-gray-500">Planeje e gerencie suas visitas às Maras</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm py-4">
+        <p>ASMARA Gestão de Ligas © 2025 | A Força de Renda da Favela</p>
+    </footer>
+
+    <script>
+        // Dados para o gráfico de evolução diária
+        const ctx = document.getElementById('dailySalesChart').getContext('2d');
+        const dailySalesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['01/04', '02/04', '03/04', '04/04', '05/04', '06/04', '07/04', '08/04', '09/04', '10/04', '11/04', '12/04', '13/04', '14/04', '15/04', '16/04', '17/04', '18/04', '19/04', '20/04', '21/04', '22/04', '23/04', '24/04', '25/04', '26/04', '27/04', '28/04', '29/04', '30/04'],
+                datasets: [{
+                    label: 'Vendas Diárias (R$)',
+                    data: [380, 420, 390, 450, 320, 280, 520, 610, 430, 380, 520, 490, 350, 410, 440, 520, 610, 580, 490, 380, 420, 570, 620, 590, 480, 530, 490, 630, 580, 610],
+                    backgroundColor: 'rgba(255, 0, 102, 0.1)',
+                    borderColor: 'rgba(255, 0, 102, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(255, 0, 102, 1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDhykpTdWx5ulsLWaFcsqsDMO8Nr7mnmWwuuX%2F5Wxh436v%2BFWuoaREcNiu5y0mqb3hNrrk9cJ%2FVqh21%2F%2FQXwWJs%2F5KaiJLy%2BmxmFQ0Q5%2B0stKtFXl3DyrbeIPc1Xo7%2FnaNC%2B220XL52GzTcyY%2FYRaGGjL94FCUU9N7dh0fQYZfIN%2BhZ7DlHFvD9%2FwQcHJWb4TQfsUne%2BfjZjGLVC2emToBkwIa3qdDhL0ZCdXuonNpIzmyYjaAlEujS9SeH0cMMC%2BOmtUA3RfEMR%2BKrZtY%2Foa4YgfMQwgQqm0ghhST4hkt%2F9uEdjx95E7OxptqsQLABRkF8cLKSCsvn4Uo5qlgBISgBNJYavBujlFrecYp8AHZKgTiKMDNJWMkMhnohd19G6M4RIbZ%2FL21i3Vbey7ZvUeWZzqZHkGksifmk%2Fxycysdgk6V6l%2Bvlhull1f3fbMB2%2B8dNC8L91CyZ62sXi3z7xMhO8XBMx1TgGDkCx09ohU3qf%2FnzxWgBIjilu7Ic59yXi0DDAnCdaadurOnCHgHX3xv%2BE%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDhykpTdWx5ulsLWaFcsqsDMO8Nr7mnmWwuuX/5Wxh436v+FWuoaREcNiu5y0mqb3hNrrk9cJ/Vqh21//QXwWJs/5KaiJLy+mxmFQ0Q5+0stKtFXl3DyrbeIPc1Xo7/naNC+220XL52GzTcyY/YRaGGjL94FCUU9N7dh0fQYZfIN+hZ7DlHFvD9/wQcHJWb4TQfsUne+fjZjGLVC2emToBkwIa3qdDhL0ZCdXuonNpIzmyYjaAlEujS9SeH0cMMC+OmtUA3RfEMR+KrZtY/oa4YgfMQwgQqm0ghhST4hkt/9uEdjx95E7OxptqsQLABRkF8cLKSCsvn4Uo5qlgBISgBNJYavBujlFrecYp8AHZKgTiKMDNJWMkMhnohd19G6M4RIbZ/L21i3Vbey7ZvUeWZzqZHkGksifmk/xycysdgk6V6l+vlhull1f3fbMB2+8dNC8L91CyZ62sXi3z7xMhO8XBMx1TgGDkCx09ohU3qf/nzxWgBIjilu7Ic59yXi0DDAnCdaadurOnCHgHX3xv+E=";
+    </script>
+    </body></html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://kwazokid.genspark.space/ -->
+<html lang="pt-br"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Visão por Carteira</title>
+    <link href="./dashboard-carteira_files/tailwind.min.css" rel="stylesheet">
+    <script src="./dashboard-carteira_files/chart.min.js"></script>
+    <style>
+        :root {
+            --asmara-pink: #FF0066;
+            --asmara-dark-pink: #CC0052;
+            --asmara-light-pink: #FF99BB;
+            --asmara-blue: #0066CC;
+            --asmara-yellow: #FFCC00;
+            --asmara-green: #00CC66;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .bg-asmara-pink {
+            background-color: var(--asmara-pink);
+        }
+        
+        .bg-asmara-light-pink {
+            background-color: var(--asmara-light-pink);
+        }
+        
+        .text-asmara-pink {
+            color: var(--asmara-pink);
+        }
+        
+        .border-asmara-pink {
+            border-color: var(--asmara-pink);
+        }
+        
+        .btn-asmara {
+            background-color: var(--asmara-pink);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-asmara:hover {
+            background-color: var(--asmara-dark-pink);
+        }
+        
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 16px;
+            border-bottom: 1px solid #eee;
+            font-weight: bold;
+        }
+        
+        .card-body {
+            padding: 16px;
+        }
+        
+        .alert {
+            border-left: 4px solid;
+            padding-left: 12px;
+        }
+        
+        .alert-danger {
+            border-color: #dc3545;
+        }
+        
+        .alert-warning {
+            border-color: #ffc107;
+        }
+        
+        .alert-success {
+            border-color: #28a745;
+        }
+
+        /* Badges for performance indicators */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-danger {
+            background-color: #FFEBEE;
+            color: #D32F2F;
+        }
+
+        .badge-warning {
+            background-color: #FFF8E1;
+            color: #FFA000;
+        }
+
+        .badge-success {
+            background-color: #E8F5E9;
+            color: #388E3C;
+        }
+        
+        /* Customization for select */
+        select.custom-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF0066' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1em;
+        }
+
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #E0E0E0;
+            overflow: hidden;
+        }
+
+        .progress-value {
+            height: 100%;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+    <header class="bg-asmara-pink text-white p-4 shadow-md">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <h1 class="text-2xl font-bold">ASMARA Gestão de Ligas</h1>
+                <span class="ml-2 bg-white text-asmara-pink text-xs font-semibold px-2 py-1 rounded-full">Super ADM</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm">Dados atualizados em: Abril/2025</span>
+                <a href="https://kwazokid.genspark.space/#" class="bg-white text-asmara-pink px-3 py-1 rounded-md text-sm font-medium hover:bg-gray-100">Atualizar Dados</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-6">
+        <div class="mb-8 bg-white rounded-lg shadow-md p-4">
+            <h2 class="text-xl font-semibold mb-4">Visão por Carteira</h2>
+            
+            <div class="mb-6">
+                <label for="coordinator" class="block text-gray-700 text-sm font-medium mb-2">Selecione o Coordenador:</label>
+                <div class="flex gap-4">
+                    <select id="coordinator" class="custom-select block w-full bg-white border border-gray-300 rounded-md py-2 px-4 pr-8 focus:outline-none focus:ring-asmara-pink focus:border-asmara-pink">
+                        <option value="all">Todos os Coordenadores</option>
+                        <option value="maria">Maria Silva (4 ONGs)</option>
+                        <option value="joao">João Santos (2 ONGs)</option>
+                        <option value="ana">Ana Oliveira (3 ONGs)</option>
+                    </select>
+                    <button class="btn-asmara px-4 py-2 rounded-md text-sm font-medium">Filtrar</button>
+                </div>
+                
+                <div class="mt-4 p-3 bg-pink-50 border border-pink-200 rounded-md">
+                    <p class="text-sm"><strong>Coordenador selecionado:</strong> <span id="selected-coordinator">Todos os Coordenadores</span></p>
+                </div>
+            </div>
+            
+            <!-- Filter Period -->
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-medium mb-2">Período:</label>
+                <div class="flex flex-wrap gap-2">
+                    <button class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-200">Últimos 30 dias</button>
+                    <button class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-200">Este mês</button>
+                    <button class="px-4 py-2 bg-asmara-pink text-white rounded-md text-sm font-medium">Abril/2025</button>
+                    <button class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm font-medium hover:bg-gray-200">Personalizado</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- KPI Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Vendas -->
+            <div class="card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-gray-500 text-sm">Total de Vendas</h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold">R$ 25.388,84</span>
+                        <span class="ml-2 text-green-500 text-sm">+12%</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-1">645 itens vendidos</p>
+                </div>
+            </div>
+            
+            <!-- Número de Maras -->
+            <div class="card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-gray-500 text-sm">Maras Ativas</h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold">51</span>
+                        <span class="ml-2 text-red-500 text-sm">-5%</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-1">de 83 Maras cadastradas</p>
+                </div>
+            </div>
+            
+            <!-- Microcrédito -->
+            <div class="card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-gray-500 text-sm">Microcrédito Concedido</h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold">R$ 29.243,72</span>
+                        <span class="ml-2 text-green-500 text-sm">+8%</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-1">545 operações</p>
+                </div>
+            </div>
+            
+            <!-- Inadimplência -->
+            <div class="card">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-gray-500 text-sm">Taxa de Inadimplência</h3>
+                </div>
+                <div class="p-4">
+                    <div class="flex items-baseline">
+                        <span class="text-3xl font-bold">30,8%</span>
+                        <span class="ml-2 text-red-500 text-sm">+2%</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mt-1">R$ 9.022,16 pendente</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ONGs da Carteira Section -->
+        <div class="card mb-8">
+            <div class="card-header bg-gray-50 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">ONGs da Carteira</h3>
+                <button class="text-sm text-asmara-pink hover:underline">Ver todas</button>
+            </div>
+            <div class="p-4">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="bg-gray-50 text-xs text-gray-500 uppercase tracking-wider">
+                                <th class="py-3 px-4 text-left">ONG</th>
+                                <th class="py-3 px-4 text-right">Vendas</th>
+                                <th class="py-3 px-4 text-right">Maras Ativas</th>
+                                <th class="py-3 px-4 text-right">Microcrédito</th>
+                                <th class="py-3 px-4 text-right">Inadimplência</th>
+                                <th class="py-3 px-4 text-right">Taxa de Conversão</th>
+                                <th class="py-3 px-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">ASSOC. REDE ACESSIBILIDADE</div>
+                                    <div class="text-xs text-gray-500">ID: 22223343000158</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 12.338,87</td>
+                                <td class="py-3 px-4 text-right">18</td>
+                                <td class="py-3 px-4 text-right">R$ 8.191,89</td>
+                                <td class="py-3 px-4 text-right">R$ 1.657,29</td>
+                                <td class="py-3 px-4 text-right">21,1%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-success">Excelente</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">Instituto Eclesia Movement</div>
+                                    <div class="text-xs text-gray-500">ID: 37018069000152</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 4.164,10</td>
+                                <td class="py-3 px-4 text-right">15</td>
+                                <td class="py-3 px-4 text-right">R$ 3.854,16</td>
+                                <td class="py-3 px-4 text-right">R$ 365,54</td>
+                                <td class="py-3 px-4 text-right">21,2%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-success">Excelente</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">ASSOC. BENEF. VIVENDA DA CRIANÇA</div>
+                                    <div class="text-xs text-gray-500">ID: 61577110000105</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 3.268,47</td>
+                                <td class="py-3 px-4 text-right">13</td>
+                                <td class="py-3 px-4 text-right">R$ 3.372,39</td>
+                                <td class="py-3 px-4 text-right">R$ 573,62</td>
+                                <td class="py-3 px-4 text-right">26,1%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-success">Excelente</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">Instituto Sonhar Alto</div>
+                                    <div class="text-xs text-gray-500">ID: 36724182000190</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 2.752,85</td>
+                                <td class="py-3 px-4 text-right">9</td>
+                                <td class="py-3 px-4 text-right">R$ 2.430,53</td>
+                                <td class="py-3 px-4 text-right">R$ 628,56</td>
+                                <td class="py-3 px-4 text-right">33,7%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-warning">Regular</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">Instituto Resiliência Azul</div>
+                                    <div class="text-xs text-gray-500">ID: 47859674000100</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 2.572,37</td>
+                                <td class="py-3 px-4 text-right">11</td>
+                                <td class="py-3 px-4 text-right">R$ 0,00</td>
+                                <td class="py-3 px-4 text-right">R$ 0,00</td>
+                                <td class="py-3 px-4 text-right">0%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-danger">Atenção</span>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4 whitespace-nowrap">
+                                    <div class="font-medium text-gray-900">UNIDADES PROPRIAS</div>
+                                    <div class="text-xs text-gray-500">ID: 18463148000128</div>
+                                </td>
+                                <td class="py-3 px-4 text-right font-medium">R$ 381,78</td>
+                                <td class="py-3 px-4 text-right">5</td>
+                                <td class="py-3 px-4 text-right">R$ 11.395,55</td>
+                                <td class="py-3 px-4 text-right">R$ 5.797,15</td>
+                                <td class="py-3 px-4 text-right">10,8%</td>
+                                <td class="py-3 px-4 text-center">
+                                    <span class="badge badge-danger">Crítico</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Comparative & Products Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <!-- Comparative Section -->
+            <div class="card">
+                <div class="card-header bg-gray-50">
+                    <h3 class="text-lg font-semibold">Comparativo de Performance</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="performanceChart" height="600" style="display: block; box-sizing: border-box; height: 300px; width: 580px;" width="1160"></canvas>
+                </div>
+            </div>
+            
+            <!-- Top Products Section -->
+            <div class="card">
+                <div class="card-header bg-gray-50">
+                    <h3 class="text-lg font-semibold">Produtos Mais Vendidos</h3>
+                </div>
+                <div class="p-4">
+                    <canvas id="productsChart" height="600" style="display: block; box-sizing: border-box; height: 300px; width: 580px;" width="1160"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alerts Section -->
+        <div class="card mb-8">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Alertas da Carteira</h3>
+            </div>
+            <div class="p-4">
+                <div class="space-y-4">
+                    <div class="alert alert-danger bg-red-50 p-4 rounded-md">
+                        <h4 class="text-red-700 font-medium">Alta taxa de inadimplência</h4>
+                        <p class="text-red-600 text-sm mt-1">3 ONGs possuem taxa de inadimplência acima de 30% do microcrédito concedido.</p>
+                    </div>
+                    <div class="alert alert-warning bg-yellow-50 p-4 rounded-md">
+                        <h4 class="text-yellow-700 font-medium">Maras sem atividade</h4>
+                        <p class="text-yellow-600 text-sm mt-1">32 Maras não registraram vendas no mês atual, sendo 12 com microcrédito ativo.</p>
+                    </div>
+                    <div class="alert alert-success bg-green-50 p-4 rounded-md">
+                        <h4 class="text-green-700 font-medium">Destaque de performance</h4>
+                        <p class="text-green-600 text-sm mt-1">ASSOCIACAO REDE ACESSIBILIDADE teve o maior volume de vendas no mês: R$ 12.338,07</p>
+                    </div>
+                    <div class="alert alert-warning bg-yellow-50 p-4 rounded-md">
+                        <h4 class="text-yellow-700 font-medium">Baixo volume de vendas</h4>
+                        <p class="text-yellow-600 text-sm mt-1">UNIDADES PROPRIAS apresenta conversão de apenas 10,8% do microcrédito em vendas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historical Data Section -->
+        <div class="card mb-8">
+            <div class="card-header bg-gray-50">
+                <h3 class="text-lg font-semibold">Análise de Tendências</h3>
+            </div>
+            <div class="p-4">
+                <canvas id="trendChart" height="400" style="display: block; box-sizing: border-box; height: 200px; width: 1216px;" width="2432"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-gray-100 py-4 border-t border-gray-200">
+        <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+            <p>ASMARA Gestão de Ligas © 2025 | Dashboard Super ADM</p>
+            <p class="mt-1">A Força de Renda da Favela</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Performance Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const performanceChart = new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr'],
+                datasets: [
+                    {
+                        label: 'REDE ACESSIBILIDADE',
+                        data: [8200, 8900, 10500, 12300],
+                        borderColor: '#FF0066',
+                        backgroundColor: 'rgba(255, 0, 102, 0.1)',
+                        tension: 0.3,
+                        borderWidth: 3,
+                        fill: true
+                    },
+                    {
+                        label: 'ECLESIA MOVEMENT',
+                        data: [3600, 3800, 4000, 4100],
+                        borderColor: '#7986CB',
+                        backgroundColor: 'rgba(121, 134, 203, 0.1)',
+                        tension: 0.3,
+                        borderWidth: 3,
+                        fill: true
+                    },
+                    {
+                        label: 'SONHAR ALTO',
+                        data: [2100, 2300, 2400, 2700],
+                        borderColor: '#FFB74D',
+                        backgroundColor: 'rgba(255, 183, 77, 0.1)',
+                        tension: 0.3,
+                        borderWidth: 3,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 6
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Products Chart
+        const productsCtx = document.getElementById('productsChart').getContext('2d');
+        const productsChart = new Chart(productsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Liquidificador CS L-99', 'Air Fryer CS 110v', 'Caixa Amplif. MCO 8', 'Vestido Curto Fem', 'Blusa Manga Curta'],
+                datasets: [{
+                    label: 'Vendas (R$)',
+                    data: [9239.16, 4559.88, 2970, 824.62, 1074.25],
+                    backgroundColor: [
+                        '#FF0066',
+                        '#FF6699',
+                        '#FF99CC',
+                        '#FFCCDD',
+                        '#FFE6EE'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += 'R$ ' + context.parsed.y.toLocaleString('pt-BR');
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Trend Chart
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(trendCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr'],
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Faturamento Total',
+                        data: [20500, 21800, 23900, 25388],
+                        backgroundColor: 'rgba(255, 0, 102, 0.7)',
+                        order: 2
+                    },
+                    {
+                        type: 'line',
+                        label: 'Taxa de Conversão %',
+                        data: [19, 21, 22, 23.6],
+                        borderColor: '#FFD700',
+                        backgroundColor: 'rgba(255, 215, 0, 0.2)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#FFD700',
+                        yAxisID: 'y1',
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 6
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Vendas (R$)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + value.toLocaleString('pt-BR');
+                            }
+                        }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Taxa de Conversão (%)'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                        min: 0,
+                        max: 30,
+                        ticks: {
+                            stepSize: 5,
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Coordinator selection
+        document.getElementById('coordinator').addEventListener('change', function(e) {
+            const selectedValue = e.target.value;
+            const coordinatorNames = {
+                'all': 'Todos os Coordenadores',
+                'maria': 'Maria Silva (4 ONGs)',
+                'joao': 'João Santos (2 ONGs)',
+                'ana': 'Ana Oliveira (3 ONGs)'
+            };
+            
+            document.getElementById('selected-coordinator').textContent = coordinatorNames[selectedValue];
+        });
+    </script>
+
+
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDvzcMPL8T05bwxb%2FnbJqL5p4oQ03hNtno2iYVHA5uMajsLsYrtKeB%2BJGi%2BgTC6kMjBkDHtbkqLvcMAH2CMCsS9QBOEX8vu9aMBU3DoNr%2FaF4dUKlJ6UyQJr9NKXW6T1deURM%2FB1yIOofbEH16SXzUKOUQoJdBwsCEE5cIktGD2ru8yETIdhjDuK9P%2FjxiULcPVeBmSkco%2Fj2b53aj86TyLachGPDBjQOk7Z5utrvNcEzBA91vh4h7JBKzXLVA7F%2B%2FIGRFZXsGgVrrIWm9AeBIezXtciEqZtp%2FhED3xsry8HMg8KyBtc2diOvYUasewuJls5VuvRIdvOhD%2Fahfwvqta4WMJzyqiCeGcNFwiXkyXSKjW%2BKYUbR3hGC%2Bsew%2Fc%2Fj3OfNfeb2l0uZVrcUC%2FK2V1Zc77A15EAaL8ye9v1E0R1s7pZzB%2BLLiKaELIIjgsb6LNnnaxgGo%2FevnEk80PxvdAIpzjNRohAqz7M%2Bihl241%2FSDveTL5YiKk%2FYgGF5oQfv8A%3D%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDvzcMPL8T05bwxb/nbJqL5p4oQ03hNtno2iYVHA5uMajsLsYrtKeB+JGi+gTC6kMjBkDHtbkqLvcMAH2CMCsS9QBOEX8vu9aMBU3DoNr/aF4dUKlJ6UyQJr9NKXW6T1deURM/B1yIOofbEH16SXzUKOUQoJdBwsCEE5cIktGD2ru8yETIdhjDuK9P/jxiULcPVeBmSkco/j2b53aj86TyLachGPDBjQOk7Z5utrvNcEzBA91vh4h7JBKzXLVA7F+/IGRFZXsGgVrrIWm9AeBIezXtciEqZtp/hED3xsry8HMg8KyBtc2diOvYUasewuJls5VuvRIdvOhD/ahfwvqta4WMJzyqiCeGcNFwiXkyXSKjW+KYUbR3hGC+sew/c/j3OfNfeb2l0uZVrcUC/K2V1Zc77A15EAaL8ye9v1E0R1s7pZzB+LLiKaELIIjgsb6LNnnaxgGo/evnEk80PxvdAIpzjNRohAqz7M+ihl241/SDveTL5YiKk/YgGF5oQfv8A==";
+    </script>
+    </body></html>
