@@ -1,21 +1,125 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <!-- Meta tags e CSS aqui -->
-    <title>ASMARA Gestão de Ligas</title>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-</head>
-<body>
-    <div class="login-container">
-        <!-- Formulário de login aqui -->
-    </div>
-    
-    <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
-</body>
-</html>
+@@ -1,9 +1,14 @@
+ <!DOCTYPE html>
+ <html lang="pt-BR">
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>ASMARA Gestão de Ligas</title>
+     <!-- Firebase SDK -->
+     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+     <style>
+         :root {
+             --primary-color: #FF0066;
+ @@ -97,9 +102,47 @@
+             color: #777;
+             font-size: 14px;
+         }
+ 
+         .error-message {
+             color: #dc3545;
+             margin-bottom: 20px;
+             font-size: 14px;
+             text-align: center;
+         }
+ 
+         .loading {
+             position: fixed;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background-color: rgba(255, 255, 255, 0.8);
+             display: flex;
+             justify-content: center;
+             align-items: center;
+             z-index: 9999;
+         }
+ 
+         .spinner {
+             width: 40px;
+             height: 40px;
+             border: 4px solid rgba(255, 0, 102, 0.3);
+             border-radius: 50%;
+             border-top: 4px solid var(--primary-color);
+             animation: spin 1s linear infinite;
+         }
+ 
+         @keyframes spin {
+             0% { transform: rotate(0deg); }
+             100% { transform: rotate(360deg); }
+         }
+     </style>
+ </head>
+ <body>
+     <div id="loading" class="loading" style="display: none;">
+         <div class="spinner"></div>
+     </div>
+ 
+     <div class="login-container">
+         <div class="login-box">
+             <div class="login-logo">
+ @@ -108,14 +151,16 @@
+             <h1>ASMARA Gestão de Ligas</h1>
+             <h2>Login</h2>
+ 
+             <div id="error-message" class="error-message" style="display: none;"></div>
+             
+             <form id="login-form">
+                 <div class="form-group">
+                     <label for="username">Usuário</label>
+                     <input type="text" id="username" required>
+                     <label for="email">Email</label>
+                     <input type="email" id="email" required autocomplete="email">
+                 </div>
+                 <div class="form-group">
+                     <label for="password">Senha</label>
+                     <input type="password" id="password" required>
+                     <input type="password" id="password" required autocomplete="current-password">
+                 </div>
+                 <button type="submit" class="login-button">Entrar</button>
+             </form>
+ @@ -126,39 +171,7 @@
+         </div>
+     </div>
+ 
+     <script>
+         document.addEventListener('DOMContentLoaded', function() {
+             const loginForm = document.getElementById('login-form');
+             
+             loginForm.addEventListener('submit', function(e) {
+                 e.preventDefault();
+                 
+                 const username = document.getElementById('username').value;
+                 const password = document.getElementById('password').value;
+                 
+                 // Credenciais simplificadas para demonstração
+                 const users = {
+                     'superadm': { password: 'senha123', role: 'superadm' },
+                     'ong': { password: 'senha123', role: 'ong' },
+                     'gestor': { password: 'senha123', role: 'gestor' },
+                     'mara': { password: 'senha123', role: 'mara' }
+                 };
+                 
+                 if (users[username] && users[username].password === password) {
+                     // Login bem-sucedido
+                     localStorage.setItem('currentUser', JSON.stringify({
+                         username: username,
+                         role: users[username].role
+                     }));
+                     
+                     // Redirecionar com base no papel do usuário
+                     window.location.href = 'dashboard-super-adm.html';
+                 } else {
+                     // Login falhou
+                     alert('Usuário ou senha incorretos. Use superadm/senha123 para testar.');
+                 }
+             });
+         });
+     </script>
+     <script src="js/firebase-config.js"></script>
+     <script src="js/auth.js"></script>
+ </body>
+ </html>
