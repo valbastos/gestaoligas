@@ -1,0 +1,17 @@
+// Configuração do Firebase - Substitua pelas suas configurações do console Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyBxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  authDomain: "asmara-gestao-ligas.firebaseapp.com",
+  projectId: "asmara-gestao-ligas",
+  storageBucket: "asmara-gestao-ligas.appspot.com",
+  messagingSenderId: "xxxxxxxxxxxx",
+  appId: "1:xxxxxxxxxxxx:web:xxxxxxxxxxxx"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Referências globais para serviços Firebase
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
