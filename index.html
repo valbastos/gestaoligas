@@ -4,13 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASMARA Gestão de Ligas</title>
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --primary-color: #FF0066;
+            --secondary-color: #6C0F5A;
+            --light-color: #ffffff;
+            --dark-color: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #FF0066 0%, #6C0F5A 100%);
+        }
+        
+        .login-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        
+        .login-logo img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .login-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .login-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-box">
             <div class="login-logo">
-                <img src="images/logo-asmara.png" alt="ASMARA Logo">
+                <img src="logo-asmara.png" alt="ASMARA Logo">
             </div>
             <h1>ASMARA Gestão de Ligas</h1>
             <h2>Login</h2>
@@ -32,6 +125,40 @@
             </div>
         </div>
     </div>
-    <script src="js/login.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                // Credenciais simplificadas para demonstração
+                const users = {
+                    'superadm': { password: 'senha123', role: 'superadm' },
+                    'ong': { password: 'senha123', role: 'ong' },
+                    'gestor': { password: 'senha123', role: 'gestor' },
+                    'mara': { password: 'senha123', role: 'mara' }
+                };
+                
+                if (users[username] && users[username].password === password) {
+                    // Login bem-sucedido
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        username: username,
+                        role: users[username].role
+                    }));
+                    
+                    // Redirecionar com base no papel do usuário
+                    window.location.href = 'dashboard-super-adm.html';
+                } else {
+                    // Login falhou
+                    alert('Usuário ou senha incorretos. Use superadm/senha123 para testar.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
