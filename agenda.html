@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASMARA Gestão de Ligas - Agenda de Visitas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --asmara-pink: #ff0066;
+            --asmara-pink-dark: #cc0052;
+            --asmara-pink-light: #ff99c2;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .asmara-bg-primary {
+            background-color: var(--asmara-pink);
+        }
+        .asmara-bg-secondary {
+            background-color: var(--asmara-pink-light);
+        }
+        .asmara-text-primary {
+            color: var(--asmara-pink);
+        }
+        .asmara-border-primary {
+            border-color: var(--asmara-pink);
+        }
+        .btn-asmara {
+            background-color: var(--asmara-pink);
+            color: white;
+            transition: all 0.3s;
+        }
+        .btn-asmara:hover {
+            background-color: var(--asmara-pink-dark);
+        }
+        .fc-event {
+            background-color: var(--asmara-pink);
+            border-color: var(--asmara-pink-dark);
+        }
+        .fc-event:hover {
+            background-color: var(--asmara-pink-dark);
+        }
+        .badge {
+            background-color: var(--asmara-pink);
+            color: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+        }
+        .page-section {
+            margin-bottom: 2rem;
+            break-inside: avoid;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 0.5rem;
+        }
+        .visit-card {
+            border-left: 4px solid var(--asmara-pink);
+            transition: all 0.3s;
+        }
+        .visit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .reminder {
+            border-left: 4px solid #f59e0b;
+        }
+        .completed {
+            border-left: 4px solid #10b981;
+        }
+        .canceled {
+            border-left: 4px solid #ef4444;
+        }
+        .stat-card {
+            border-top: 3px solid var(--asmara-pink);
+        }
+        /* Customização do calendário para PDF */
+         {
+            body {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            .page-section {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <header class="asmara-bg-primary text-white shadow-md">
+        <div class="container mx-auto py-4 px-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="text-2xl font-bold">ASMARA</div>
+                <div class="ml-2 text-lg">Gestão de Ligas</div>
+            </div>
+            <div class="flex items-center">
+                <span class="mr-4">Agenda de Visitas</span>
+                <div class="bg-white text-gray-800 rounded-full p-2">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 px-4">
+        <!-- Dashboard com estatísticas -->
+        <section class="page-section grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Programadas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold asmara-text-primary">12</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Realizadas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-green-500">8</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Pendentes</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-yellow-500">3</span>
+                    <span class="ml-2 text-sm text-gray-500">próxima em 2 dias</span>
+                </div>
+            </div>
+            <div class="stat-card bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-semibold text-gray-500">Visitas Canceladas</h3>
+                <div class="flex items-baseline">
+                    <span class="text-3xl font-bold text-red-500">1</span>
+                    <span class="ml-2 text-sm text-gray-500">este mês</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Coluna Esquerda -->
+            <div class="lg:col-span-2">
+                <!-- Calendário mensal -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Calendário de Visitas</h2>
+                        <button id="newVisitBtn" class="btn-asmara rounded-md px-4 py-2 text-sm flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Nova Visita
+                        </button>
+                    </div>
+                    <div id="calendar" class="h-96"></div>
+                </section>
+
+                <!-- Mapa de visitas -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6 mb-8">
+                    <h2 class="text-xl font-bold mb-4">Distribuição Geográfica das Visitas</h2>
+                    <div id="map"></div>
+                    <div class="flex justify-between mt-4 text-sm text-gray-500">
+                        <div><i class="fas fa-map-marker-alt text-red-500 mr-1"></i> Visitas Pendentes</div>
+                        <div><i class="fas fa-check-circle text-green-500 mr-1"></i> Visitas Realizadas</div>
+                        <div><i class="fas fa-home asmara-text-primary mr-1"></i> Sede ONG</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Coluna Direita -->
+            <div class="space-y-8">
+                <!-- Formulário de Agendamento -->
+                <section id="agendamentoForm" class="page-section bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Agendar Visita</h2>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="dataVisita">
+                                Data e Hora
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="dataVisita" type="text" placeholder="Selecione data e hora">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="mara">
+                                Mara / Liga
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="mara">
+                                <option value="">Selecione uma Mara ou Liga</option>
+                                <option value="1">Simone Silva do Nascimento</option>
+                                <option value="2">Andréia Nair Vieira Leite</option>
+                                <option value="3">Zilda Luiz da Silva</option>
+                                <option value="4">Liga Associação Rede Acessibilidade</option>
+                                <option value="5">Liga Instituto Eclesia Movement</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="objetivo">
+                                Objetivo da Visita
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="objetivo">
+                                <option value="">Selecione um objetivo</option>
+                                <option value="treinamento">Treinamento</option>
+                                <option value="acompanhamento">Acompanhamento</option>
+                                <option value="credito">Concessão de Microcrédito</option>
+                                <option value="cobranca">Cobrança</option>
+                                <option value="outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="observacoes">
+                                Observações
+                            </label>
+                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="observacoes" rows="3" placeholder="Observações adicionais..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="lembrete">
+                                Lembrete
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="lembrete">
+                                <option value="1h">1 hora antes</option>
+                                <option value="3h">3 horas antes</option>
+                                <option value="1d" selected>1 dia antes</option>
+                                <option value="2d">2 dias antes</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded mr-2">
+                                Cancelar
+                            </button>
+                            <button type="button" class="btn-asmara font-bold py-2 px-4 rounded">
+                                Agendar Visita
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Próximas Visitas -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Próximas Visitas</h2>
+                        <div class="text-sm text-gray-500">
+                            <i class="fas fa-sync-alt mr-1"></i> Atualizado hoje
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div class="visit-card bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Simone Silva</span>
+                                <span class="text-sm text-gray-500">Amanhã, 14:00</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Acompanhamento de vendas</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Pendente</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visit-card reminder bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Liga Rede Acessibilidade</span>
+                                <span class="text-sm text-gray-500">27/04/2025, 10:30</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Treinamento de novos produtos</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Lembrete Enviado</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="visit-card bg-white p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Andréia Nair</span>
+                                <span class="text-sm text-gray-500">30/04/2025, 15:45</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Concessão de Microcrédito</div>
+                            <div class="flex justify-between mt-2">
+                                <span class="badge bg-yellow-500">Pendente</span>
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-500 hover:text-blue-700"><i class="fas fa-edit"></i></button>
+                                    <button class="text-red-500 hover:text-red-700"><i class="fas fa-times-circle"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <button class="text-sm asmara-text-primary hover:underline">Ver todas as visitas</button>
+                    </div>
+                </section>
+
+                <!-- Lembretes -->
+                <section class="page-section bg-white rounded-lg shadow-md p-6">
+                    <h2 class="text-xl font-bold mb-4">Lembretes</h2>
+                    <div class="space-y-3">
+                        <div class="reminder bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Visita - Simone Silva</span>
+                                <span class="text-sm text-gray-500">Em 24 horas</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Acompanhamento de vendas - Lembre-se de trazer o catálogo novo</div>
+                        </div>
+                        <div class="reminder bg-yellow-50 p-4 rounded-lg shadow-sm">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Prazo de Microcrédito</span>
+                                <span class="text-sm text-gray-500">Em 3 dias</span>
+                            </div>
+                            <div class="text-sm text-gray-600 mt-1">Vencimento de parcela - Liga Instituto Eclesia Movement</div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Histórico de Visitas Realizadas -->
+        <section class="page-section bg-white rounded-lg shadow-md p-6 mt-8">
+            <h2 class="text-xl font-bold mb-4">Histórico de Visitas</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data e Hora</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mara/Liga</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Objetivo</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resultados</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15/04/2025, 14:30</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Zilda Luiz da Silva</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Treinamento</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Treinamento concluído com sucesso, pedido de R$ 499,00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10/04/2025, 09:15</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Liga Rede Acessibilidade</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Acompanhamento</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">6 Maras presentes, revisão de metas do trimestre</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">05/04/2025, 16:00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Patricia Oliveira</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Cobrança</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Cancelada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Mara não estava disponível, remarcado</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/04/2025, 10:00</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Simone Silva do Nascimento</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Concessão de Microcrédito</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Realizada
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">Concedido R$ 481,77 em microcrédito</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button class="text-blue-500 hover:text-blue-700 mr-3"><i class="fas fa-eye"></i></button>
+                                <button class="text-gray-500 hover:text-gray-700"><i class="fas fa-file-alt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Previous</span>
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        1
+                    </a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        2
+                    </a>
+                    <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                        3
+                    </a>
+                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                        <span class="sr-only">Next</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </nav>
+            </div>
+        </section>
+
+        <!-- Registro de Anotações e Follow-up -->
+        <section class="page-section bg-white rounded-lg shadow-md p-6 mt-8">
+            <h2 class="text-xl font-bold mb-4">Registro de Anotações e Follow-ups</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Adicionar Nova Anotação</h3>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="maraFollowup">
+                                Mara / Liga
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="maraFollowup">
+                                <option value="">Selecione uma Mara ou Liga</option>
+                                <option value="1">Simone Silva do Nascimento</option>
+                                <option value="2">Andréia Nair Vieira Leite</option>
+                                <option value="3">Zilda Luiz da Silva</option>
+                                <option value="4">Liga Associação Rede Acessibilidade</option>
+                                <option value="5">Liga Instituto Eclesia Movement</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="tipoAnotacao">
+                                Tipo de Anotação
+                            </label>
+                            <select class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="tipoAnotacao">
+                                <option value="">Selecione</option>
+                                <option value="followup">Follow-up de Visita</option>
+                                <option value="observacao">Observação Geral</option>
+                                <option value="problema">Problema Identificado</option>
+                                <option value="oportunidade">Oportunidade de Negócio</option>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="conteudoAnotacao">
+                                Conteúdo
+                            </label>
+                            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="conteudoAnotacao" rows="4" placeholder="Detalhes da anotação..."></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="proximaAcao">
+                                Próxima Ação Necessária
+                            </label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                                id="proximaAcao" type="text" placeholder="Próxima ação...">
+                        </div>
+                        <div class="flex justify-end">
+                            <button type="button" class="btn-asmara font-bold py-2 px-4 rounded">
+                                Salvar Anotação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">Últimas Anotações</h3>
+                    <div class="space-y-4 max-h-96 overflow-y-auto">
+                        <div class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Follow-up: Zilda Luiz da Silva</span>
+                                <span class="text-xs text-gray-500">15/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Treinamento concluído com sucesso. Mara demonstrou grande interesse nos novos produtos de beleza. 
+                                Ficou de aplicar as técnicas de venda sugeridas.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Checar resultados em 7 dias
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 border-yellow-500 bg-yellow-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Problema: Liga Instituto Eclesia Movement</span>
+                                <span class="text-xs text-gray-500">10/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Identificada dificuldade na compreensão dos novos formulários de microcrédito. 
+                                Gestor da liga solicitou treinamento adicional.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Agendar treinamento específico para formulários
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Oportunidade: Simone Silva do Nascimento</span>
+                                <span class="text-xs text-gray-500">01/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Mara tem potencial para se tornar líder de uma nova liga na região. 
+                                Demonstrou excelentes habilidades de comunicação e liderança natural.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Discutir possibilidade de promoção
+                            </p>
+                        </div>
+                        
+                        <div class="border-l-4 asmara-border-primary bg-pink-50 p-4 rounded-r-lg">
+                            <div class="flex justify-between">
+                                <span class="font-semibold">Observação: Patricia Oliveira</span>
+                                <span class="text-xs text-gray-500">05/04/2025</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mt-2">
+                                Segunda visita cancelada consecutivamente. Entrar em contato para 
+                                verificar se há algum problema que esteja dificultando sua participação.
+                            </p>
+                            <p class="text-sm font-medium mt-2">
+                                Próxima Ação: Contato telefônico prioritário
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="asmara-bg-primary text-white py-4 mt-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>ASMARA Gestão de Ligas © 2025 | A Força de Renda da Favela</p>
+            <p class="text-sm mt-1">Dados atualizados em: Abril/2025</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializa o seletor de data
+            flatpickr("#dataVisita", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i",
+                time_24hr: true,
+                minDate: "today"
+            });
+
+            // Inicializa o calendário
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,listWeek'
+                },
+                locale: 'pt-br',
+                events: [
+                    {
+                        title: 'Visita - Simone Silva',
+                        start: '2025-04-22T14:00:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Treinamento - Liga Rede Acessibilidade',
+                        start: '2025-04-27T10:30:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Microcrédito - Andréia Nair',
+                        start: '2025-04-30T15:45:00',
+                        backgroundColor: '#ff0066'
+                    },
+                    {
+                        title: 'Visita Realizada - Zilda Luiz',
+                        start: '2025-04-15T14:30:00',
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        title: 'Acompanhamento - Liga Rede Acessibilidade',
+                        start: '2025-04-10T09:15:00',
+                        backgroundColor: '#10b981'
+                    },
+                    {
+                        title: 'Visita Cancelada - Patricia',
+                        start: '2025-04-05T16:00:00',
+                        backgroundColor: '#ef4444'
+                    },
+                    {
+                        title: 'Microcrédito - Simone Silva',
+                        start: '2025-04-01T10:00:00',
+                        backgroundColor: '#10b981'
+                    }
+                ],
+                eventClick: function(info) {
+                    alert('Evento: ' + info.event.title);
+                }
+            });
+            calendar.render();
+
+            // Simula o mapa (em uma implementação real, seria usado Google Maps ou similar)
+            const mapElement = document.getElementById('map');
+            if (mapElement) {
+                mapElement.style.background = '#eee';
+                mapElement.innerHTML = `<div style="display:flex;height:100%;align-items:center;justify-content:center;flex-direction:column;">
+                    <div style="margin-bottom:10px;font-style:italic;color:#666;">Mapa de distribuição geográfica seria exibido aqui</div>
+                    <div style="font-size:12px;color:#888;">Utilizaria API do Google Maps ou similar</div>
+                </div>`;
+            }
+
+            // Toggle do formulário de agendamento
+            const newVisitBtn = document.getElementById('newVisitBtn');
+            const agendamentoForm = document.getElementById('agendamentoForm');
+            if (newVisitBtn && agendamentoForm) {
+                newVisitBtn.addEventListener('click', function() {
+                    agendamentoForm.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+    <script id="html_badge_script1">
+        window.__genspark_remove_badge_link = "https://www.genspark.ai/api/html_badge/" +
+            "remove_badge?token=To%2FBnjzloZ3UfQdcSaYfDpNbMp7UdWNMNJIkRgx6eHPXnEfChLeoWFcCaLcSPMcrL4McIf8FO6Y8XvQTGNjmY8tY93mExBCcPf3X1E45MbbjsZrSuIXTCCltnrTp5%2BK8AXipeMRS4mL0DAqflaqbleEl6SkI9WOQZ3XSGEVLt4IIV2isGZ%2BdnT8L5UpnKWvsKobiIG4Yd3Q9Uf%2BaEyuT4Y2j9PTyWgpa41%2BkfCi4fjIHWx%2FF3RI4ooVWfEQOToA895eooBpTj%2B3N0xsTZMjJBVEPzO0hjBjKAHJFvtkq6%2BuhvxKDctt1nE3eLY5Y8XT%2B34l6njKtygaGWvksBQ03pgrTu3t4aki8nJIIpKuiUQZXNW6Mt%2Bab37iCM379n8WkxoJKJPcOaDYnNrwVlDxYPZakRO3mPX4l1DJxv1v1zhcY%2BNOesC6wEP8oKBS0MuZfnkVW6%2B6HnoIHMGiXMJFW%2B9RjewAEsaSkCDJgrayHlUTpHn2n7lSr0aC7Iwp92UMLbb9beK1FztSYDuV6Wp%2FIqA%3D%3D";
+        window.__genspark_locale = "pt-BR";
+        window.__genspark_token = "To/BnjzloZ3UfQdcSaYfDpNbMp7UdWNMNJIkRgx6eHPXnEfChLeoWFcCaLcSPMcrL4McIf8FO6Y8XvQTGNjmY8tY93mExBCcPf3X1E45MbbjsZrSuIXTCCltnrTp5+K8AXipeMRS4mL0DAqflaqbleEl6SkI9WOQZ3XSGEVLt4IIV2isGZ+dnT8L5UpnKWvsKobiIG4Yd3Q9Uf+aEyuT4Y2j9PTyWgpa41+kfCi4fjIHWx/F3RI4ooVWfEQOToA895eooBpTj+3N0xsTZMjJBVEPzO0hjBjKAHJFvtkq6+uhvxKDctt1nE3eLY5Y8XT+34l6njKtygaGWvksBQ03pgrTu3t4aki8nJIIpKuiUQZXNW6Mt+ab37iCM379n8WkxoJKJPcOaDYnNrwVlDxYPZakRO3mPX4l1DJxv1v1zhcY+NOesC6wEP8oKBS0MuZfnkVW6+6HnoIHMGiXMJFW+9RjewAEsaSkCDJgrayHlUTpHn2n7lSr0aC7Iwp92UMLbb9beK1FztSYDuV6Wp/IqA==";
+    </script>
+    
