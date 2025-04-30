@@ -593,3 +593,214 @@ function showError(message) {
         errorElement.classList.remove('show');
     }, 5000);
 }
+// Adicionar ao final do arquivo
+document.getElementById('update-btn').addEventListener('click', function() {
+    // Criar modal de upload
+    const modalHTML = `
+    <div id="upload-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Atualizar Dados</h3>
+                <button class="close-button" id="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <button class="tab active" data-tab="tab-indicadores">Indicadores de Ligas</button>
+                    <button class="tab" data-tab="tab-produtos">Produtos</button>
+                </div>
+                
+                <div class="tab-content active" id="tab-indicadores">
+                    <p>Faça upload do arquivo Excel com os dados atualizados de indicadores.</p>
+                    <div class="form-group">
+                        <label for="indicadores-file">Arquivo de Indicadores</label>
+                        <input type="file" id="indicadores-file" accept=".xlsx,.xls,.csv">
+                    </div>
+                    <div id="indicadores-last-update" class="last-update-info"></div>
+                </div>
+                
+                <div class="tab-content" id="tab-produtos">
+                    <p>Faça upload do arquivo Excel com os dados atualizados de produtos.</p>
+                    <div class="form-group">
+                        <label for="produtos-file">Arquivo de Produtos</label>
+                        <input type="file" id="produtos-file" accept=".xlsx,.xls,.csv">
+                    </div>
+                    <div id="produtos-last-update" class="last-update-info"></div>
+                </div>
+                
+                <div id="upload-progress" class="progress" style="display: none;">
+                    <div class="progress-bar"></div>
+                    <div class="progress-text">0%</div>
+                </div>
+                
+                <div id="upload-message" class="alert" style="display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-upload">Cancelar</button>
+                <button class="btn btn-primary" id="submit-upload">Processar Arquivo</button>
+            </div>
+        </div>
+    </div>
+    `;
+    
+    // Adicionar modal ao DOM
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHTML;
+    document.body.appendChild(modalContainer.firstChild);
+    
+    // Exibir modal
+    const modal = document.getElementById('upload-modal');
+    modal.style.display = 'flex';
+    
+    // Exibir última atualização
+    dataProcessing.getLastUpdate().then(lastUpdate => {
+        const indicadoresElement = document.getElementById('indicadores-last-update');
+        const produtosElement = document.getElementById('produtos-last-update');
+        
+        if (lastUpdate.indicadoresTimestamp) {
+            const date = lastUpdate.indicadoresTimestamp.toDate();
+            indicadoresElement.textContent = `Última atualização: ${date.toLocaleDateString('pt-BR')} ${date.toLocaleTimeString('pt-BR')}`;
+        } else {
+            indicadoresElement.textContent = 'Nenhuma atualização anterior.';
+        }
+        
+        if (lastUpdate.produtosTimestamp) {
+            const date = lastUpdate.produtosTimestamp.toDate();
+            produtosElement.textContent = `Última atualização: ${date.toLocaleDateString('pt-BR')} ${date.toLocaleTimeString('pt-BR')}`;
+        } else {
+            produtosElement.textContent = 'Nenhuma atualização anterior.';
+        }
+    });
+    
+    // Configurar eventos
+    setupModalEvents();
+    
+    function setupModalEvents() {
+        // Fechar modal
+        document.getElementById('close-modal').addEventListener('click', closeModal);
+        document.getElementById('cancel-upload').addEventListener('click', closeModal);
+        
+        // Alternar abas
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Desativar todas as abas
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Ativar aba selecionada
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Submeter upload
+        document.getElementById('submit-upload').addEventListener('click', submitUpload);
+        
+        // Fechar ao clicar fora
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+    }
+    
+    function closeModal() {
+        document.body.removeChild(modal);
+    }
+    
+    function submitUpload() {
+        // Determinar qual aba está ativa
+        const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+        
+        // Selecionar arquivo correto
+        let fileInput;
+        let fileType;
+        
+        if (activeTab === 'tab-indicadores') {
+            fileInput = document.getElementById('indicadores-file');
+            fileType = 'indicadores';
+        } else {
+            fileInput = document.getElementById('produtos-file');
+            fileType = 'produtos';
+        }
+        
+        // Verificar se arquivo foi selecionado
+        if (!fileInput.files || fileInput.files.length === 0) {
+            showMessage('error', 'Por favor, selecione um arquivo para upload.');
+            return;
+        }
+        
+        const file = fileInput.files[0];
+        
+        // Configurar callbacks
+        dataProcessing.onProgress = function(progress) {
+            // Mostrar barra de progresso
+            const progressBar = document.getElementById('upload-progress');
+            const progressBarInner = progressBar.querySelector('.progress-bar');
+            const progressText = progressBar.querySelector('.progress-text');
+            
+            progressBar.style.display = 'block';
+            progressBarInner.style.width = progress + '%';
+            progressText.textContent = Math.round(progress) + '%';
+        };
+        
+        // Desabilitar botão durante upload
+        const submitButton = document.getElementById('submit-upload');
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+        
+        // Limpar mensagens anteriores
+        document.getElementById('upload-message').style.display = 'none';
+        
+        // Iniciar upload
+        dataProcessing.uploadFile(file, fileType)
+            .then(result => {
+                showMessage('success', 'Arquivo enviado com sucesso! Processando dados...');
+                
+                // Monitorar processamento
+                dataProcessing.monitorProcessing(
+                    result.id,
+                    // Sucesso
+                    (processedData) => {
+                        showMessage('success', 'Dados processados com sucesso!');
+                        
+                        // Reabilitar botão
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Processar Arquivo';
+                        
+                        // Após alguns segundos, fechar modal e recarregar
+                        setTimeout(() => {
+                            closeModal();
+                            location.reload();
+                        }, 2000);
+                    },
+                    // Erro
+                    (error) => {
+                        showMessage('error', 'Erro ao processar arquivo: ' + error.message);
+                        
+                        // Reabilitar botão
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Processar Arquivo';
+                    }
+                );
+            })
+            .catch(error => {
+                showMessage('error', 'Erro ao enviar arquivo: ' + error.message);
+                
+                // Reabilitar botão
+                submitButton.disabled = false;
+                submitButton.textContent = 'Processar Arquivo';
+            });
+    }
+    
+    function showMessage(type, message) {
+        const messageElement = document.getElementById('upload-message');
+        messageElement.textContent = message;
+        messageElement.className = `alert ${type === 'success' ? 'success' : 'danger'}`;
+        messageElement.style.display = 'block';
+    }
+});
+<script src="js/firebase-config.js"></script>
+<script src="js/data-processing.js"></script>
+<script src="js/dashboard-super-adm.js"></script>
