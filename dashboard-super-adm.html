@@ -550,3 +550,51 @@
     <script src="js/data-processing.js"></script>
 </body>
 </html>
+<!-- Modal para upload de arquivos -->
+<div id="upload-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Atualizar Dados</h3>
+      <button type="button" class="close-button" id="close-upload-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab-button active" data-tab="indicadores-tab">Indicadores de Ligas</button>
+        <button class="tab-button" data-tab="produtos-tab">Produtos</button>
+      </div>
+      
+      <div id="indicadores-tab" class="tab-content active">
+        <p>Faça upload do arquivo Excel com os dados atualizados de indicadores.</p>
+        <div class="form-group">
+          <label for="indicadores-file">Arquivo de Indicadores:</label>
+          <input type="file" id="indicadores-file" accept=".xlsx,.xls,.csv">
+          <small class="form-text">Formatos aceitos: Excel (.xlsx, .xls) e CSV</small>
+        </div>
+        <div id="indicadores-last-update" class="last-update-info"></div>
+      </div>
+      
+      <div id="produtos-tab" class="tab-content">
+        <p>Faça upload do arquivo Excel com os dados atualizados de produtos.</p>
+        <div class="form-group">
+          <label for="produtos-file">Arquivo de Produtos:</label>
+          <input type="file" id="produtos-file" accept=".xlsx,.xls,.csv">
+          <small class="form-text">Formatos aceitos: Excel (.xlsx, .xls) e CSV</small>
+        </div>
+        <div id="produtos-last-update" class="last-update-info"></div>
+      </div>
+      
+      <div id="upload-progress" class="progress-container" style="display: none;">
+        <div class="progress">
+          <div class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="progress-text">0%</div>
+      </div>
+      
+      <div id="upload-message" class="alert" style="display: none;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="cancel-upload">Cancelar</button>
+      <button type="button" class="btn btn-primary" id="process-upload">Processar Arquivo</button>
+    </div>
+  </div>
+</div>
